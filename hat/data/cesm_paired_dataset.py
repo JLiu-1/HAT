@@ -58,7 +58,9 @@ class CesmPairedImageDataset(data.Dataset):
         # generate training pairs
         size_h = max(size_h, self.opt['gt_size'])
         size_w = max(size_w, self.opt['gt_size'])
+        print(img_gt.shape)
         img_gt = cv2.resize(img_gt, (size_w, size_h))
+        print(img_gt.shape)
         img_lq = imresize(img_gt, 1 / scale)
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
@@ -72,8 +74,8 @@ class CesmPairedImageDataset(data.Dataset):
 
             print(img_gt.shape)
             print(img_lq.shape)
-            # flip, rotation
-            #img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])
+             flip, rotation
+            img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])
 
         # color space transform
         if 'color' in self.opt and self.opt['color'] == 'y':
@@ -86,7 +88,7 @@ class CesmPairedImageDataset(data.Dataset):
             img_gt = img_gt[0:img_lq.shape[0] * scale, 0:img_lq.shape[1] * scale, :]
 
         # BGR to RGB, HWC to CHW, numpy to tensor
-        img_gt, img_lq = img2tensor([img_gt, img_lq], bgr2rgb=True, float32=True)
+        img_gt, img_lq = img2tensor([img_gt, img_lq], bgr2rgb=False, float32=True)
         # normalize
         if self.mean is not None or self.std is not None:
             normalize(img_lq, self.mean, self.std, inplace=True)
