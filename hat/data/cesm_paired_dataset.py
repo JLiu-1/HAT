@@ -12,10 +12,10 @@ from basicsr.utils.registry import DATASET_REGISTRY
 
 
 @DATASET_REGISTRY.register()
-class CesmPairedDataset(data.Dataset):
+class CesmPairedImageDataset(data.Dataset):
     
     def __init__(self, opt):
-        super(CesmPairedDataset, self).__init__()
+        super(CesmPairedImageDataset, self).__init__()
         self.opt = opt
         # file client (io backend)
         self.file_client = None
