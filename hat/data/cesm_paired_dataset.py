@@ -75,7 +75,7 @@ class CesmPairedImageDataset(data.Dataset):
             #print(img_gt.shape)
             #print(img_lq.shape)
             #flip, rotation
-            #img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])
+            #img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])#to customize
         '''
         # color space transform
         if 'color' in self.opt and self.opt['color'] == 'y':
@@ -94,7 +94,7 @@ class CesmPairedImageDataset(data.Dataset):
             normalize(img_lq, self.mean, self.std, inplace=True)
             normalize(img_gt, self.mean, self.std, inplace=True)
 
-        return {'lq': img_lq, 'gt': img_gt, 'gt_path': gt_path}
+        return {'lq': img_lq, 'gt': img_gt, 'gt_path': gt_path,'lq_path': gt_path}#temp
 
     def __len__(self):
         return len(self.paths)
