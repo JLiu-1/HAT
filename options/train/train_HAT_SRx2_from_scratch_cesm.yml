@@ -30,7 +30,7 @@ datasets:
   val_1:
     name: Set5
     type: PairedImageDataset
-    dataroot_gt: ./datasets/Set5/GTmod2
+    dataroot_gt: ./datasets/Set5/GTmod12
     dataroot_lq: ./datasets/Set5/LRbicx2
     io_backend:
       type: disk
