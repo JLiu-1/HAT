@@ -58,9 +58,9 @@ class CesmPairedImageDataset(data.Dataset):
         # generate training pairs
         size_h = max(size_h, self.opt['gt_size'])
         size_w = max(size_w, self.opt['gt_size'])
-        print(img_gt.shape)
-        img_gt = cv2.resize(img_gt, (size_w, size_h,1))
-        print(img_gt.shape)
+        #print(img_gt.shape)
+        #img_gt = cv2.resize(img_gt, (size_w, size_h,1))
+        #print(img_gt.shape)
         img_lq = imresize(img_gt, 1 / scale)
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
@@ -72,8 +72,8 @@ class CesmPairedImageDataset(data.Dataset):
             # random crop
             img_gt, img_lq = paired_random_crop(img_gt, img_lq, gt_size, scale, gt_path)#to customize
 
-            print(img_gt.shape)
-            print(img_lq.shape)
+            #print(img_gt.shape)
+            #print(img_lq.shape)
             #flip, rotation
             img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])
 
