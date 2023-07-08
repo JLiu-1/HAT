@@ -31,6 +31,7 @@ datasets:
     name: Cesm-CLDHGH-Val
     type: CesmPairedImageDataset
     dataroot_gt: ./datasets/preprocessed_val
+    gt_size: 128
     #dataroot_lq: ./datasets/Set5/LRbicx2
     io_backend:
       type: disk
