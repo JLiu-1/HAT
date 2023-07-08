@@ -10,7 +10,7 @@ datasets:
   train:
     name: Cesm-CLDHGH
     type: CesmPairedImageDataset
-    dataroot_gt: ./datasets/processed
+    dataroot_gt: ./datasets/preprocessed
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
