@@ -75,13 +75,13 @@ class CesmPairedImageDataset(data.Dataset):
             #print(img_gt.shape)
             #print(img_lq.shape)
             #flip, rotation
-            img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])
-
+            #img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])
+        '''
         # color space transform
         if 'color' in self.opt and self.opt['color'] == 'y':
             img_gt = rgb2ycbcr(img_gt, y_only=True)[..., None]
             img_lq = rgb2ycbcr(img_lq, y_only=True)[..., None]
-
+        '''
         # crop the unmatched GT images during validation or testing, especially for SR benchmark datasets
         # TODO: It is better to update the datasets, rather than force to crop
         if self.opt['phase'] != 'train':
