@@ -47,7 +47,7 @@ class CesmPairedImageDataset(data.Dataset):
         gt_path = self.paths[index]
         img_bytes = self.file_client.get(gt_path, 'gt')
         #img_gt = imfrombytes(img_bytes, float32=True)
-        img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.slice_size,self,slice_size,1))
+        img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.slice_size,self.slice_size,1))
 
         # modcrop
         size_h, size_w, _ = img_gt.shape
