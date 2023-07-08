@@ -59,7 +59,7 @@ class CesmPairedImageDataset(data.Dataset):
         size_h = max(size_h, self.opt['gt_size'])
         size_w = max(size_w, self.opt['gt_size'])
         print(img_gt.shape)
-        img_gt = cv2.resize(img_gt, (size_w, size_h))
+        img_gt = cv2.resize(img_gt, (size_w, size_h,1))
         print(img_gt.shape)
         img_lq = imresize(img_gt, 1 / scale)
 
