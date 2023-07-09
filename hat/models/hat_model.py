@@ -129,7 +129,7 @@ class HATModel(SRModel):
         metric_data = dict()
         if use_pbar:
             pbar = tqdm(total=len(dataloader), unit='image')
-        if save_img_path:
+        if save_img:
             if self.opt['is_train']:
                 save_img_dir = osp.join(self.opt['path']['visualization'], img_name)
             else:
