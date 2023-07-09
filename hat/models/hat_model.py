@@ -10,6 +10,7 @@ import math
 from tqdm import tqdm
 from os import path as osp
 import os
+import numpy as np
 @MODEL_REGISTRY.register()
 class HATModel(SRModel):
 
