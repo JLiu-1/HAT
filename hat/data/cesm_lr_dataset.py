@@ -15,7 +15,7 @@ from basicsr.utils.registry import DATASET_REGISTRY
 class CesmLrImageDataset(data.Dataset):
     
     def __init__(self, opt):
-        super(CesmPairedImageDataset, self).__init__()
+        super(CesmLrImageDataset, self).__init__()
         self.opt = opt
         # file client (io backend)
         self.file_client = None
