@@ -27,14 +27,14 @@ datasets:
     dataset_enlarge_ratio: 1
     prefetch_mode: ~
 
-  val_1:
-    name: Cesm-CLDHGH-Val
-    type: CesmPairedImageDataset
-    dataroot_gt: ./datasets/preprocessed_val
-    gt_size: 128
+  #val_1:
+  #  name: Cesm-CLDHGH-Val
+  #  type: CesmPairedImageDataset
+  #  dataroot_gt: ./datasets/preprocessed_val
+  #  gt_size: 128
     #dataroot_lq: ./datasets/Set5/LRbicx2
-    io_backend:
-      type: disk
+  #  io_backend:
+  #    type: disk
 
   #val_2:
   #  name: Set14
@@ -122,7 +122,7 @@ val:
 # logging settings
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 5e3
+  save_checkpoint_freq: !!float 2.5e3
   use_tb_logger: true
   wandb:
     project: ~
