@@ -136,6 +136,7 @@ class HATModel(SRModel):
             else:
                 
                 save_img_dir = osp.join(self.opt['path']['visualization'], dataset_name)
+            print(save_img_dir)
             if not osp.exists(save_img_dir):
                 os.makedirs(save_img_dir)
         for idx, val_data in enumerate(dataloader):
