@@ -24,7 +24,7 @@ class CesmPairedImageDataset(data.Dataset):
         self.mean = opt['mean'] if 'mean' in opt else None
         self.std = opt['std'] if 'std' in opt else None
         self.gt_folder = opt['dataroot_gt']
-        self.size_x=opt['size_x'] if 'ssize_x' in opt else 480
+        self.size_x=opt['size_x'] if 'size_x' in opt else 480
         self.size_y=opt['size_y'] if 'size_y' in opt else 480
 
         if self.io_backend_opt['type'] == 'lmdb':
