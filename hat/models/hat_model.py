@@ -112,7 +112,7 @@ class HATModel(SRModel):
         self.output = self.output[:, :, 0:h - self.mod_pad_h * self.scale, 0:w - self.mod_pad_w * self.scale]
 
     def nondist_validation(self, dataloader, current_iter, tb_logger, save_img):
-        print("nidielaile")
+        #print("nidielaile")
         dataset_name = dataloader.dataset.opt['name']
         with_metrics = self.opt['val'].get('metrics') is not None
         use_pbar = self.opt['val'].get('pbar', False)
@@ -129,7 +129,14 @@ class HATModel(SRModel):
         metric_data = dict()
         if use_pbar:
             pbar = tqdm(total=len(dataloader), unit='image')
-
+        if save_img_path:
+            if self.opt['is_train']:
+                save_img_dir = osp.join(self.opt['path']['visualization'], img_name)
+            else:
+                
+                save_img_dir = osp.join(self.opt['path']['visualization'], dataset_name)
+            if not osp.exists(save_img_dir):
+                os.makedirs(save_img_dir)
         for idx, val_data in enumerate(dataloader):
             img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
             self.feed_data(val_data)
@@ -155,6 +162,7 @@ class HATModel(SRModel):
             torch.cuda.empty_cache()
 
             if save_img:
+               
                 if self.opt['is_train']:
                     save_img_path = osp.join(self.opt['path']['visualization'], img_name,
                                              f'{img_name}_{current_iter}.dat')
@@ -167,7 +175,7 @@ class HATModel(SRModel):
                                                  f'{img_name}_{self.opt["name"]}.dat')
                 #imwrite(sr_img, save_img_path)
                 sr_img.tofile(save_img_path)
-                print("woshinibaba")
+                #print("woshinibaba")
 
             if with_metrics:
                 # calculate metrics
