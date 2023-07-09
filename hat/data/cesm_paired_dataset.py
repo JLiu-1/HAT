@@ -24,7 +24,8 @@ class CesmPairedImageDataset(data.Dataset):
         self.mean = opt['mean'] if 'mean' in opt else None
         self.std = opt['std'] if 'std' in opt else None
         self.gt_folder = opt['dataroot_gt']
-        self.slice_size=opt['slice_size'] if 'slice_size' in opt else 480
+        self.size_x=opt['size_x'] if 'ssize_x' in opt else 480
+        self.size_y=opt['size_y'] if 'size_y' in opt else 480
 
         if self.io_backend_opt['type'] == 'lmdb':
             self.io_backend_opt['db_paths'] = [self.gt_folder]
@@ -47,7 +48,7 @@ class CesmPairedImageDataset(data.Dataset):
         gt_path = self.paths[index]
         img_bytes = self.file_client.get(gt_path, 'gt')
         #img_gt = imfrombytes(img_bytes, float32=True)
-        img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.slice_size,self.slice_size,1))
+        img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
 
         # modcrop
         size_h, size_w, _ = img_gt.shape
