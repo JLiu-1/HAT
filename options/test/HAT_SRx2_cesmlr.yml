@@ -83,12 +83,12 @@ val:
   save_img: true
   suffix: ~  # add suffix to saved images, if None, use exp name
 
-  metrics:
-    psnr: # metric name, can be arbitrary
-      type: calculate_psnr
-      crop_border: 2
-      test_y_channel: true
-    ssim:
-      type: calculate_ssim
-      crop_border: 2
-      test_y_channel: true
+  #metrics:
+  #  psnr: # metric name, can be arbitrary
+  #    type: calculate_psnr
+  #    crop_border: 2
+  #    test_y_channel: true
+  #  ssim:
+  #    type: calculate_ssim
+  #    crop_border: 2
+  #    test_y_channel: true
