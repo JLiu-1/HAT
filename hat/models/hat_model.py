@@ -112,6 +112,7 @@ class HATModel(SRModel):
         self.output = self.output[:, :, 0:h - self.mod_pad_h * self.scale, 0:w - self.mod_pad_w * self.scale]
 
     def nondist_validation(self, dataloader, current_iter, tb_logger, save_img):
+        print("nidielaile")
         dataset_name = dataloader.dataset.opt['name']
         with_metrics = self.opt['val'].get('metrics') is not None
         use_pbar = self.opt['val'].get('pbar', False)
@@ -166,6 +167,7 @@ class HATModel(SRModel):
                                                  f'{img_name}_{self.opt["name"]}.dat')
                 #imwrite(sr_img, save_img_path)
                 sr_img.tofile(save_img_path)
+                print("woshinibaba")
 
             if with_metrics:
                 # calculate metrics
