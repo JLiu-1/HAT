@@ -13,8 +13,8 @@ datasets:
     name: Cesm-LR
     type:  CesmLrImageDataset
     dataroot_lq:  ./datasets/preprocessed_val_3
-    size_x: 1800
-    size_y: 3600
+    size_x: 900
+    size_y: 1800
     #dataroot_lq: ./datasets/Set5/LRbicx2
     lq_size: 64
     io_backend:
