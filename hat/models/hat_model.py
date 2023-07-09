@@ -149,10 +149,10 @@ class HATModel(SRModel):
             self.post_process()
 
             visuals = self.get_current_visuals()
-            sr_img = tensor2img([visuals['result']])
+            sr_img = tensor2img([visuals['result']],rgb2bgr=False, out_type=np.float32)
             metric_data['img'] = sr_img
             if 'gt' in visuals:
-                gt_img = tensor2img([visuals['gt']])
+                gt_img = tensor2img([visuals['gt']],rgb2bgr=False, out_type=np.float32)
                 metric_data['img2'] = gt_img
                 del self.gt
 
