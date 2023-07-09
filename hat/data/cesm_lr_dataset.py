@@ -60,7 +60,7 @@ class CesmLrImageDataset(data.Dataset):
         size_h = max(size_h, self.opt['lq_size'])
         size_w = max(size_w, self.opt['lq_size'])
         #print(img_gt.shape)
-        img_lq = cv2.resize(img_gt, (size_w, size_h,1))
+        img_lq = cv2.resize(img_lq, (size_w, size_h,1))
         #print(img_gt.shape)
         #img_lq = imresize(img_gt, 1 / scale)
 
