@@ -8,7 +8,7 @@ datasets:
   test_1:  # the 1st test dataset
     name: Cesm-CLDHGH
     type:  CesmPairedImageDataset
-    dataroot_gt:  ./datasets/preprocessed_val
+    dataroot_gt:  ./datasets/preprocessed_val_2
     #dataroot_lq: ./datasets/Set5/LRbicx2
     gt_size: 128
     io_backend:
