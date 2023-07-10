@@ -2,6 +2,7 @@
 import cv2
 import numpy as np
 import os.path as osp
+import torch
 from torch.utils import data as data
 from torchvision.transforms.functional import normalize
 
