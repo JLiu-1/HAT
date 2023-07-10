@@ -127,8 +127,8 @@ class HATModel_3D(SRModel):
         _, _, h, w, d = self.output.size()
         self.output = self.output[:, :, 0:h - self.mod_pad_h * self.scale, 0:w - self.mod_pad_w * self.scale, 0:d - self.mod_pad_d * self.scale]
 
-    def nondist_validation(self, dataloader, current_iter, tb_logger, save_img):#todo
-        #print("nidielaile")
+    def nondist_validation(self, dataloader, current_iter, tb_logger, save_img):
+        print("nidielaile")
         dataset_name = dataloader.dataset.opt['name']
         with_metrics = self.opt['val'].get('metrics') is not None
         use_pbar = self.opt['val'].get('pbar', False)
@@ -156,6 +156,10 @@ class HATModel_3D(SRModel):
                 os.makedirs(save_img_dir)
         for idx, val_data in enumerate(dataloader):
             img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
+
+            lmax=val_data['lmax'][0] if 'lmax' in val_data else 1
+            lmin=val_data['lmin'][0] if 'lmin' in val_data else 0
+            print("val",lmin,lmax)
             self.feed_data(val_data)
 
             self.pre_process()
@@ -166,10 +170,22 @@ class HATModel_3D(SRModel):
             self.post_process()
 
             visuals = self.get_current_visuals()
-            sr_img = tensor2img([visuals['result']],rgb2bgr=False, out_type=np.float32)
+            def _tonumpy(tensor,minmax=(0,1)):
+
+
+                tensor=(tensor-minmax[0])/(minmax[1]-minmax[0])
+                print(tensor.shape)
+                img_np = _tensor.numpy()
+                img_np = img_np.transpose(1, 2,3, 0)
+                img_np = np.squeeze(img_np, axis=3)
+                img_np = img_np.astype(np.float32)
+                return img_np
+
+
+            sr_img = _tonumpy([visuals['result']],(lmin,lmax))
             metric_data['img'] = sr_img
             if 'gt' in visuals:
-                gt_img = tensor2img([visuals['gt']],rgb2bgr=False, out_type=np.float32)
+                gt_img = _tonumpy([visuals['gt']],(lmin,lmax))
                 metric_data['img2'] = gt_img
                 del self.gt
 
