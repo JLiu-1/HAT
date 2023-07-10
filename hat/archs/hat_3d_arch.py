@@ -121,7 +121,7 @@ def window_reverse(windows, window_size, h, w,d):
     Returns:
         x: (b, h, w, d,c)
     """
-    print(windows.shape())
+    print(windows.shape)
     print(window_size)
     print(h,w,d)
     b = int(windows.shape[0] / (h * w *d/ window_size / window_size/window_size))
