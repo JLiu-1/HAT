@@ -128,7 +128,7 @@ class HATModel_3D(SRModel):
         self.output = self.output[:, :, 0:h - self.mod_pad_h * self.scale, 0:w - self.mod_pad_w * self.scale, 0:d - self.mod_pad_d * self.scale]
 
     def nondist_validation(self, dataloader, current_iter, tb_logger, save_img):
-        #print("nidielaile")
+        print("nidielaile")
         dataset_name = dataloader.dataset.opt['name']
         with_metrics = self.opt['val'].get('metrics') is not None
         use_pbar = self.opt['val'].get('pbar', False)
@@ -159,7 +159,7 @@ class HATModel_3D(SRModel):
 
             lmax=val_data['lmax'][0] if 'lmax' in val_data else 1
             lmin=val_data['lmin'][0] if 'lmin' in val_data else 0
-            print(lmin,lmax)
+            print("val",lmin,lmax)
             self.feed_data(val_data)
 
             self.pre_process()
