@@ -78,8 +78,11 @@ class Sci3DDataset(data.Dataset):
             y_start=np.random.randint(size_w//scale-lq_size)
             z_start=np.random.randint(size_d//scale-lq_size)
 
+
+            #img_lq=img_gt[x_start:x_start+lq_size,y_start:y_start+lq_size,z_start:z_start+lq_size,:]
             img_gt=img_gt[scale*x_start:scale*x_start+gt_size,scale*y_start:scale*y_start+gt_size,scale*z_start:scale*z_start+gt_size,:]
-            img_lq=img_gt[x_start:x_start+lq_size,y_start:y_start+lq_size,z_start:z_start+lq_size,:]
+            img_lq=img_gt[::scale,::scale,::scale]
+            
 
 
 
