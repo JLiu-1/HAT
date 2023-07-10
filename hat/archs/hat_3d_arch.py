@@ -122,8 +122,11 @@ def window_reverse(windows, window_size, h, w,d):
         x: (b, h, w, d,c)
     """
     b = int(windows.shape[0] / (h * w *d/ window_size / window_size/window_size))
+    print(b)
     x = windows.view(b, h // window_size, w // window_size, d//window_size,window_size,window_size, window_size, -1)
+    print(x.shape)
     x = x.permute(0, 1, 4, 2,5, 3,6, 7).contiguous().view(b, h, w, d,-1)
+    print(x.shape)
     return x
 
 
@@ -435,7 +438,7 @@ class OCAB(nn.Module):
         #
         # merge windows
         attn_windows = attn_windows.view(-1, self.window_size, self.window_size, self.window_size, self.dim)
-        x = window_reverse(attn_windows, self.window_size, h, w,d)  # b h w c
+        x = window_reverse(attn_windows, self.window_size, h, w,d)  # b h w d c
         x = x.view(b, h * w*d, self.dim)
 
         x = self.proj(x) + shortcut
