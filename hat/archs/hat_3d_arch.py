@@ -708,6 +708,30 @@ class PatchUnEmbed(nn.Module):
         x = x.transpose(1, 2).contiguous().view(x.shape[0], self.embed_dim, x_size[0], x_size[1],x_size[2])  # b Ph*Pw*Pd c
         return x
 
+class PixelShuffle3d(nn.Module):
+    '''
+    This class is a 3d version of pixelshuffle.
+    '''
+    def __init__(self, scale):
+        '''
+        :param scale: upsample scale
+        '''
+        super().__init__()
+        self.scale = scale
+
+    def forward(self, input):
+        batch_size, channels, in_depth, in_height, in_width = input.size()
+        nOut = channels // self.scale ** 3
+
+        out_depth = in_depth * self.scale
+        out_height = in_height * self.scale
+        out_width = in_width * self.scale
+
+        input_view = input.contiguous().view(batch_size, nOut, self.scale, self.scale, self.scale, in_depth, in_height, in_width)
+
+        output = input_view.permute(0, 1, 5, 2, 6, 3, 7, 4).contiguous()
+
+        return output.view(batch_size, nOut, out_depth, out_height, out_width)
 
 class Upsample(nn.Sequential):
     """Upsample module.
@@ -722,10 +746,10 @@ class Upsample(nn.Sequential):
         if (scale & (scale - 1)) == 0:  # scale = 2^n
             for _ in range(int(math.log(scale, 2))):
                 m.append(nn.Conv3d(num_feat, 8 * num_feat, 3, 1, 1))
-                m.append(nn.PixelShuffle(2))
+                m.append(PixelShuffle3d(2))
         elif scale == 3:
             m.append(nn.Conv3d(num_feat, 27 * num_feat, 3, 1, 1))
-            m.append(nn.PixelShuffle(3))
+            m.append(PixelShuffle3d(3))
         else:
             raise ValueError(f'scale {scale} is not supported. ' 'Supported scales: 2^n and 3.')
         super(Upsample, self).__init__(*m)
