@@ -36,7 +36,7 @@ class Debug3DDataset(data.Dataset):
         #if self.file_client is None:
         #    self.file_client = FileClient(self.io_backend_opt.pop('type'), **self.io_backend_opt)
 
-        #scale = self.opt['scale']
+        scale = self.opt['scale']
 
         # Load gt and lq images. Dimension order: HWC; channel order: BGR;
         # image range: [0, 1], float32.
