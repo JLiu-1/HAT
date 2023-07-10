@@ -9,7 +9,7 @@ manual_seed: 0
 datasets:
   train:
     name: 3D_test
-    type: 3DDataset
+    type: Debug3DDataset
     #dataroot_gt: ./datasets/preprocessed
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt

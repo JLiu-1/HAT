@@ -13,7 +13,7 @@ from basicsr.utils.registry import DATASET_REGISTRY
 
 
 @DATASET_REGISTRY.register()
-class 3DDataset(data.Dataset):
+class Debug3DDataset(data.Dataset):
     
     def __init__(self, opt):
         super(3DDataset, self).__init__()
