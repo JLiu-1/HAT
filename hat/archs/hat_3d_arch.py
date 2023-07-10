@@ -379,7 +379,7 @@ class OCAB(nn.Module):
 
         self.norm1 = norm_layer(dim)
         self.qkv = nn.Linear(dim, dim * 3,  bias=qkv_bias)
-        self.unfold = nn.Unfold(kernel_size=(self.overlap_win_size, self.overlap_win_size), stride=window_size, padding=(self.overlap_win_size-window_size)//2)
+        self.unfold = nn.Unfold(kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), stride=window_size, padding=(self.overlap_win_size-window_size)//2)
 
         # define a parameter table of relative position bias
         self.relative_position_bias_table = nn.Parameter(
