@@ -408,7 +408,7 @@ class OCAB(nn.Module):
 
         # partition windows
         q_windows = window_partition(q, self.window_size)  # nw*b, window_size, window_size, self.window_size, c
-        q_windows = q_windows.view(-1, self.window_size * self.window_size self.window_size, c)  # nw*b, window_size*window_size*window_size, c
+        q_windows = q_windows.view(-1, self.window_size * self.window_size * self.window_size, c)  # nw*b, window_size*window_size*window_size, c
 
         kv_windows = self.unfold(kv) # b, c*w*w*w, nw
         # how to modify?
