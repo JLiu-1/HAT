@@ -2,6 +2,7 @@ import math
 import torch
 import torch.nn as nn
 import torch.utils.checkpoint as checkpoint
+import torch.nn.functional as F
 
 from basicsr.utils.registry import ARCH_REGISTRY
 from basicsr.archs.arch_util import to_2tuple,to_3tuple, trunc_normal_
