@@ -103,12 +103,12 @@ def window_partition(x, window_size):
     Returns:
         windows: (num_windows*b, window_size, window_size, window_size, c)
     """
-    print("part", window_size)
+    
     b, h, w,d, c = x.shape
-    print(x.shape)
+   
     x = x.view(b, h // window_size, window_size, w // window_size, window_size,d // window_size, window_size,  c)
     windows = x.permute(0, 1, 3, 5,2, 4, 6,7).contiguous().view(-1, window_size, window_size,window_size, c)
-    print(windows.shape)
+   
     return windows
 
 
@@ -1005,9 +1005,13 @@ class HAT_3D(nn.Module):
 
         if self.upsampler == 'pixelshuffle':
             # for classical SR
+            print("1",x.shape)
             x = self.conv_first(x)
+            print("2",x.shape)
             x = self.conv_after_body(self.forward_features(x)) + x
+            print("3",x.shape)
             x = self.conv_before_upsample(x)
+            print("4",x.shape)
             x = self.conv_last(self.upsample(x))
 
         x = x / self.img_range + self.mean
