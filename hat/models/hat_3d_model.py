@@ -183,10 +183,10 @@ class HATModel_3D(SRModel):
                 return img_np
 
 
-            sr_img = _tonumpy([visuals['result']][0][0],(lmin,lmax))
+            sr_img = _tonumpy([visuals['result']][0],(lmin,lmax))
             metric_data['img'] = sr_img
             if 'gt' in visuals:
-                gt_img = _tonumpy([visuals['gt']][0][0],(lmin,lmax))
+                gt_img = _tonumpy([visuals['gt']][0],(lmin,lmax))
                 metric_data['img2'] = gt_img
                 del self.gt
 
