@@ -13,9 +13,9 @@ datasets:
     name: NYX
     type:  Sci3DTestDataset
     dataroot_lq:  ./datasets/NYX_bdlog_test
-    size_x: 512
-    size_y: 512
-    size_z: 512
+    size_x: 128
+    size_y: 128
+    size_z: 128
     #dataroot_lq: ./datasets/Set5/LRbicx2
     lq_size: 64
     io_backend:
