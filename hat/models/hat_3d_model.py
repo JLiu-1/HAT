@@ -128,7 +128,7 @@ class HATModel_3D(SRModel):
         self.output = self.output[:, :, 0:h - self.mod_pad_h * self.scale, 0:w - self.mod_pad_w * self.scale, 0:d - self.mod_pad_d * self.scale]
 
     def nondist_validation(self, dataloader, current_iter, tb_logger, save_img):
-        print("nidielaile")
+        #print("nidielaile")
         dataset_name = dataloader.dataset.opt['name']
         with_metrics = self.opt['val'].get('metrics') is not None
         use_pbar = self.opt['val'].get('pbar', False)
@@ -151,7 +151,7 @@ class HATModel_3D(SRModel):
             else:
                 
                 save_img_dir = osp.join(self.opt['path']['visualization'], dataset_name)
-            print(save_img_dir)
+            #print(save_img_dir)
             if not osp.exists(save_img_dir):
                 os.makedirs(save_img_dir)
         for idx, val_data in enumerate(dataloader):
@@ -159,7 +159,7 @@ class HATModel_3D(SRModel):
 
             lmax=val_data['lmax'][0] if 'lmax' in val_data else 1
             lmin=val_data['lmin'][0] if 'lmin' in val_data else 0
-            print("val",lmin,lmax)
+            #print("val",lmin,lmax)
             self.feed_data(val_data)
 
             self.pre_process()
@@ -182,10 +182,10 @@ class HATModel_3D(SRModel):
                 return img_np
 
 
-            sr_img = _tonumpy([visuals['result']],(lmin,lmax))
+            sr_img = _tonumpy([visuals['result']][0],(lmin,lmax))
             metric_data['img'] = sr_img
             if 'gt' in visuals:
-                gt_img = _tonumpy([visuals['gt']],(lmin,lmax))
+                gt_img = _tonumpy([visuals['gt']][0],(lmin,lmax))
                 metric_data['img2'] = gt_img
                 del self.gt
 
