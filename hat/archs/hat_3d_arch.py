@@ -974,6 +974,7 @@ class HAT_3D(nn.Module):
         return {'relative_position_bias_table'}
 
     def forward_features(self, x):
+        print("x",x.shape)
         x_size = (x.shape[2], x.shape[3],x.shape[4])
 
         # Calculate attention mask and relative position index in advance to speed up inference. 
