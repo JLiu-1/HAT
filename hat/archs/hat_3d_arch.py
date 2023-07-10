@@ -686,7 +686,7 @@ class PatchUnEmbed(nn.Module):
         self.embed_dim = embed_dim
 
     def forward(self, x, x_size):
-        x = x.transpose(1, 2).contiguous().view(x.shape[0], self.embed_dim, x_size[0], x_size[1],x_size[2])  # b Ph*Pw c
+        x = x.transpose(1, 2).contiguous().view(x.shape[0], self.embed_dim, x_size[0], x_size[1],x_size[2])  # b Ph*Pw*Pd c
         return x
 
 
@@ -957,7 +957,7 @@ class HAT_3D(nn.Module):
         return {'relative_position_bias_table'}
 
     def forward_features(self, x):
-        x_size = (x.shape[2], x.shape[3])
+        x_size = (x.shape[2], x.shape[3],x.shape[4])
 
         # Calculate attention mask and relative position index in advance to speed up inference. 
         # The original code is very time-cosuming for large window size.
