@@ -412,18 +412,24 @@ class OCAB(nn.Module):
         x = x.view(b, h, w,d, c)
 
         qkv = self.qkv(x).reshape(b, h, w, d,3, c).permute(4, 0, 5, 1, 2,3) # 3, b, c, h, w,d
+        print("qkv",qkv.shape)
         q = qkv[0].permute(0, 2, 3, 4,1) # b, h, w, d,c
+        print("q",q.shape)
         kv = torch.cat((qkv[1], qkv[2]), dim=1) # b, 2*c, h, w,d
+        print("kv",kv.shape)
 
         # partition windows
         q_windows = window_partition(q, self.window_size)  # nw*b, window_size, window_size, self.window_size, c
+        print("q_windows",kv.shape)
         q_windows = q_windows.view(-1, self.window_size * self.window_size * self.window_size, c)  # nw*b, window_size*window_size*window_size, c
         kv_windows=unfold3d(kv,kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), padding=(self.overlap_win_size-self.window_size)//2, stride=self.window_size)
         #kv_windows = self.unfold(kv) # b, c*w*w*w, nw
         # how to modify?
+         print("kv_windows",kv_windows.shape)
         kv_windows = rearrange(kv_windows, 'b (nc ch owh oww owd) nw -> nc (b nw) (owh oww owd) ch', nc=2, ch=c, owh=self.overlap_win_size, oww=self.overlap_win_size, owd=self.overlap_win_size).contiguous() # 2, nw*b, ow*ow*ow, c
-        k_windows, v_windows = kv_windows[0], kv_windows[1] # nw*b, ow*ow, c
-
+        print("kv_windows2",kv_windows.shape)
+        k_windows, v_windows = kv_windows[0], kv_windows[1] # nw*b, ow*ow*ow, c
+        print("k_windows",k_windows.shape)
         b_, nq, _ = q_windows.shape
         _, n, _ = k_windows.shape
         d = self.dim // self.num_heads
@@ -436,14 +442,16 @@ class OCAB(nn.Module):
 
         relative_position_bias = self.relative_position_bias_table[rpi.view(-1)].view(
             self.window_size * self.window_size* self.window_size, self.overlap_win_size * self.overlap_win_size* self.overlap_win_size, -1)  # ws*ws*ws, wse*wse*wse, nH
-        relative_position_bias = relative_position_bias.permute(2, 0, 1).contiguous()  # nH, ws*ws, wse*wse
+        relative_position_bias = relative_position_bias.permute(2, 0, 1).contiguous()  # nH, ws*ws*ws, wse*wse*wse
         attn = attn + relative_position_bias.unsqueeze(0)
         #how to modify? end
         attn = self.softmax(attn)
+        print("attn",attn.shape)
         attn_windows = (attn @ v).transpose(1, 2).reshape(b_, nq, self.dim)
         #
         # merge windows
         attn_windows = attn_windows.view(-1, self.window_size, self.window_size, self.window_size, self.dim)
+        print("attn_windows",attn_windows)
         x = window_reverse(attn_windows, self.window_size, h, w,d)  # b h w d c
         x = x.view(b, h * w*d, self.dim)
 
