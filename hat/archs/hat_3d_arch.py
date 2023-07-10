@@ -768,7 +768,7 @@ class HAT_3D(nn.Module):
                  upsampler='',
                  resi_connection='1conv',
                  **kwargs):
-        super(HAT, self).__init__()
+        super(HAT_3D, self).__init__()
 
         self.window_size = window_size
         self.shift_size = window_size // 2
