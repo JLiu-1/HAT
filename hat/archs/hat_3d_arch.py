@@ -7,7 +7,7 @@ from basicsr.utils.registry import ARCH_REGISTRY
 from basicsr.archs.arch_util import to_2tuple,to_3tuple, trunc_normal_
 
 from einops import rearrange
-
+from opacus.utils.tensor_utils import unfold3d
 def drop_path(x, drop_prob: float = 0., training: bool = False):
     """Drop paths (Stochastic Depth) per sample (when applied in main path of residual blocks).
 
@@ -379,7 +379,7 @@ class OCAB(nn.Module):
 
         self.norm1 = norm_layer(dim)
         self.qkv = nn.Linear(dim, dim * 3,  bias=qkv_bias)
-        self.unfold = nn.Unfold(kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), stride=window_size, padding=(self.overlap_win_size-window_size)//2)
+        #self.unfold = unfold3d(kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), stride=window_size, padding=(self.overlap_win_size-window_size)//2)
 
         # define a parameter table of relative position bias
         self.relative_position_bias_table = nn.Parameter(
@@ -409,8 +409,8 @@ class OCAB(nn.Module):
         # partition windows
         q_windows = window_partition(q, self.window_size)  # nw*b, window_size, window_size, self.window_size, c
         q_windows = q_windows.view(-1, self.window_size * self.window_size * self.window_size, c)  # nw*b, window_size*window_size*window_size, c
-
-        kv_windows = self.unfold(kv) # b, c*w*w*w, nw
+        kv_windows=unfold3d(kv,kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), padding=(self.overlap_win_size-window_size)//2, stride=window_size)
+        #kv_windows = self.unfold(kv) # b, c*w*w*w, nw
         # how to modify?
         kv_windows = rearrange(kv_windows, 'b (nc ch owh oww) nw -> nc (b nw) (owh oww) ch', nc=2, ch=c, owh=self.overlap_win_size, oww=self.overlap_win_size).contiguous() # 2, nw*b, ow*ow, c
         k_windows, v_windows = kv_windows[0], kv_windows[1] # nw*b, ow*ow, c
