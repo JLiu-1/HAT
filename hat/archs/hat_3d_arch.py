@@ -409,7 +409,7 @@ class OCAB(nn.Module):
         # partition windows
         q_windows = window_partition(q, self.window_size)  # nw*b, window_size, window_size, self.window_size, c
         q_windows = q_windows.view(-1, self.window_size * self.window_size * self.window_size, c)  # nw*b, window_size*window_size*window_size, c
-        kv_windows=unfold3d(kv,kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), padding=(self.overlap_win_size-window_size)//2, stride=window_size)
+        kv_windows=unfold3d(kv,kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), padding=(self.overlap_win_size-self.window_size)//2, stride=self.window_size)
         #kv_windows = self.unfold(kv) # b, c*w*w*w, nw
         # how to modify?
         kv_windows = rearrange(kv_windows, 'b (nc ch owh oww) nw -> nc (b nw) (owh oww) ch', nc=2, ch=c, owh=self.overlap_win_size, oww=self.overlap_win_size).contiguous() # 2, nw*b, ow*ow, c
