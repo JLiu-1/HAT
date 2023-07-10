@@ -274,6 +274,7 @@ class HAB(nn.Module):
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
 
     def forward(self, x, x_size, rpi_sa, attn_mask):
+        print("HAB x_size",x_size)
         h, w ,d= x_size
         b, _, c = x.shape
         # assert seq_len == h * w*d, "input feature has wrong size"
@@ -404,6 +405,7 @@ class OCAB(nn.Module):
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=nn.GELU)
 
     def forward(self, x, x_size, rpi):
+        print("OCAB x_size",x_size)
         h, w,d = x_size
         b, _, c = x.shape
 
@@ -547,6 +549,7 @@ class AttenBlocks(nn.Module):
             self.downsample = None
 
     def forward(self, x, x_size, params):
+        print("ATB x_size",x_size)
         for blk in self.blocks:
             x = blk(x, x_size, params['rpi_sa'], params['attn_mask'])
 
@@ -639,6 +642,7 @@ class RHAG(nn.Module):
             img_size=img_size, patch_size=patch_size, in_chans=0, embed_dim=dim, norm_layer=None)
 
     def forward(self, x, x_size, params):
+        print("RHAG x_size",x_size)
         return self.patch_embed(self.conv(self.patch_unembed(self.residual_group(x, x_size, params), x_size))) + x
 
 
@@ -703,6 +707,7 @@ class PatchUnEmbed(nn.Module):
         self.embed_dim = embed_dim
 
     def forward(self, x, x_size):
+        print("PUE",x_size)
         x = x.transpose(1, 2).contiguous().view(x.shape[0], self.embed_dim, x_size[0], x_size[1],x_size[2])  # b Ph*Pw*Pd c
         return x
 
@@ -942,6 +947,7 @@ class HAT_3D(nn.Module):
         return relative_position_index
 
     def calculate_mask(self, x_size):
+        print("H3DCM x_size",x_size)
         # calculate attention mask for SW-MSA
         h, w,d = x_size
         img_mask = torch.zeros((1, h, w, d,1))  # 1 h w d 1
@@ -974,8 +980,9 @@ class HAT_3D(nn.Module):
         return {'relative_position_bias_table'}
 
     def forward_features(self, x):
-        print("x",x.shape)
+        
         x_size = (x.shape[2], x.shape[3],x.shape[4])
+        print("H3D FF",x_size)
 
         # Calculate attention mask and relative position index in advance to speed up inference. 
         # The original code is very time-cosuming for large window size.
