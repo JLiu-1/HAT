@@ -62,12 +62,12 @@ class Sci3DDataset(data.Dataset):
         #img_gt = cv2.resize(img_gt, (size_w, size_h,1))
         #print(img_gt.shape)
         #img_lq = imresize(img_gt, 1 / scale)
-        #img_lq=img_gt[::scale,::scale,::scale,:]
+        img_lq=img_gt[::scale,::scale,::scale,:]
 
 
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
-        img_lq = np.ascontiguousarray(img_lq, dtype=np.float32)
+        
 
         # augmentation for training
         if self.opt['phase'] == 'train':
