@@ -10,10 +10,10 @@ from einops import rearrange
 #from opacus.utils.tensor_utils import unfold3d
 
 def filter_dilated_rows(
-    tensor: torch.Tensor,
-    dilation: Tuple[int, int, int],
-    dilated_kernel_size: Tuple[int, int, int],
-    kernel_size: Tuple[int, int, int],
+    tensor ,
+    dilation,
+    dilated_kernel_size,
+    kernel_size,
 ):
     """
     A helper function that removes extra rows created during the process of
@@ -57,14 +57,14 @@ def filter_dilated_rows(
     return torch.Tensor(tensor_np)
 
 
-    
+
 def unfold3d(
-    tensor: torch.Tensor,
+    tensor,
     *,
-    kernel_size: Union[int, Tuple[int, int, int]],
-    padding: Union[int, Tuple[int, int, int]] = 0,
-    stride: Union[int, Tuple[int, int, int]] = 1,
-    dilation: Union[int, Tuple[int, int, int]] = 1,
+    kernel_size,
+    padding = 0,
+    stride = 1,
+    dilation = 1,
 ):
     r"""
     Extracts sliding local blocks from an batched input tensor.
