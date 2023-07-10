@@ -180,6 +180,7 @@ class HATModel_3D(SRModel):
                 img_np = np.squeeze(img_np, axis=3)
 
                 img_np = img_np.astype(np.float32)
+                print(np.min(img_np),np.max(img_np))
                 img_np=img_np*(minmax[1]-minmax[0])+minmax[0]
                 print(np.min(img_np),np.max(img_np))
                 return img_np
