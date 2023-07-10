@@ -60,8 +60,8 @@ network_g:
   in_chans: 1
   img_size: 32
   window_size: 8
-  compress_ratio: 16
-  squeeze_factor: 16
+  compress_ratio: 3
+  squeeze_factor: 30
   conv_scale: 0.01
   overlap_ratio: 0.5
   img_range: 1.
