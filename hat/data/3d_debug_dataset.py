@@ -16,7 +16,7 @@ from basicsr.utils.registry import DATASET_REGISTRY
 class Debug3DDataset(data.Dataset):
     
     def __init__(self, opt):
-        super(3DDataset, self).__init__()
+        super(Debug3DDataset, self).__init__()
         self.opt = opt
         # file client (io backend)
         self.file_client = None
