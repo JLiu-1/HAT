@@ -1,3 +1,4 @@
+
 import cv2
 import numpy as np
 import os.path as osp
@@ -12,58 +13,57 @@ from basicsr.utils.registry import DATASET_REGISTRY
 
 
 @DATASET_REGISTRY.register()
-class CesmPairedImageDataset(data.Dataset):
+class 3DDataset(data.Dataset):
     
     def __init__(self, opt):
-        super(CesmPairedImageDataset, self).__init__()
+        super(3DDataset, self).__init__()
         self.opt = opt
         # file client (io backend)
         self.file_client = None
 
-        self.io_backend_opt = opt['io_backend']
+        #self.io_backend_opt = opt['io_backend']
         self.mean = opt['mean'] if 'mean' in opt else None
         self.std = opt['std'] if 'std' in opt else None
-        self.gt_folder = opt['dataroot_gt']
-        self.size_x=opt['size_x'] if 'size_x' in opt else 480
-        self.size_y=opt['size_y'] if 'size_y' in opt else 480
+        #self.gt_folder = opt['dataroot_gt']
+        self.size_x=opt['size_x'] if 'size_x' in opt else 32
+        self.size_y=opt['size_y'] if 'size_y' in opt else 32
+        self.size_z=opt['size_z'] if 'size_z' in opt else 32
 
-        if self.io_backend_opt['type'] == 'lmdb':
-            self.io_backend_opt['db_paths'] = [self.gt_folder]
-            self.io_backend_opt['client_keys'] = ['gt']
-            self.paths = paths_from_lmdb(self.gt_folder)
-        elif 'meta_info_file' in self.opt:
-            with open(self.opt['meta_info_file'], 'r') as fin:
-                self.paths = [osp.join(self.gt_folder, line.split(' ')[0]) for line in fin]
-        else:
-            self.paths = sorted(list(scandir(self.gt_folder, full_path=True)))
+      
+        #self.paths = sorted(list(scandir(self.gt_folder, full_path=True)))
 
     def __getitem__(self, index):
-        if self.file_client is None:
-            self.file_client = FileClient(self.io_backend_opt.pop('type'), **self.io_backend_opt)
+        #if self.file_client is None:
+        #    self.file_client = FileClient(self.io_backend_opt.pop('type'), **self.io_backend_opt)
 
-        scale = self.opt['scale']
+        #scale = self.opt['scale']
 
         # Load gt and lq images. Dimension order: HWC; channel order: BGR;
         # image range: [0, 1], float32.
-        gt_path = self.paths[index]
-        img_bytes = self.file_client.get(gt_path, 'gt')
+        #gt_path = self.paths[index]
+        gt_path=" "
+        #img_bytes = self.file_client.get(gt_path, 'gt')
         #img_gt = imfrombytes(img_bytes, float32=True)
-        img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
+        #img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
 
         # modcrop
-        size_h, size_w, _ = img_gt.shape
+        img_gt=np.random.rand(self.size_x,self.size_y,self.size_z,1).astype(np.float)
+
+        size_h, size_w,size_d, _ = img_gt.shape
         size_h = size_h - size_h % scale
         size_w = size_w - size_w % scale
-        img_gt = img_gt[0:size_h, 0:size_w, :]
+        size_d = size_d - size_d % scale
+        img_gt = img_gt[0:size_h, 0:size_w, 0:size_d, :]
 
         # generate training pairs
         size_h = max(size_h, self.opt['gt_size'])
         size_w = max(size_w, self.opt['gt_size'])
+        size_d = max(size_d, self.opt['gt_size'])
         #print(img_gt.shape)
         #img_gt = cv2.resize(img_gt, (size_w, size_h,1))
         #print(img_gt.shape)
         #img_lq = imresize(img_gt, 1 / scale)
-        img_lq=img_gt[::scale,::scale,:]
+        img_lq=img_gt[::scale,::scale,::scale,:]
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
         img_lq = np.ascontiguousarray(img_lq, dtype=np.float32)
@@ -72,7 +72,7 @@ class CesmPairedImageDataset(data.Dataset):
         if self.opt['phase'] == 'train':
             gt_size = self.opt['gt_size']
             # random crop
-            img_gt, img_lq = paired_random_crop(img_gt, img_lq, gt_size, scale, gt_path)#to customize
+            #img_gt, img_lq = paired_random_crop(img_gt, img_lq, gt_size, scale, gt_path)#to customize
 
             #print(img_gt.shape)
             #print(img_lq.shape)
@@ -90,13 +90,27 @@ class CesmPairedImageDataset(data.Dataset):
             img_gt = img_gt[0:img_lq.shape[0] * scale, 0:img_lq.shape[1] * scale, :]
 
         # BGR to RGB, HWC to CHW, numpy to tensor
-        img_gt, img_lq = img2tensor([img_gt, img_lq], bgr2rgb=False, float32=True)
+
+
+        def _totensor(img):
+        
+            img = torch.from_numpy(img.transpose(3, 0, 1,2))
+            
+            img = img.float()
+            return img
+
+        img_gt=_totensor(img_gt)
+        img_lq=_totensor(img_lq)
+
+
+
         # normalize
-        if self.mean is not None or self.std is not None:
-            normalize(img_lq, self.mean, self.std, inplace=True)
-            normalize(img_gt, self.mean, self.std, inplace=True)
+        #if self.mean is not None or self.std is not None:
+         #   normalize(img_lq, self.mean, self.std, inplace=True)
+         #   normalize(img_gt, self.mean, self.std, inplace=True)
 
         return {'lq': img_lq, 'gt': img_gt, 'gt_path': gt_path,'lq_path': gt_path}#temp
 
     def __len__(self):
-        return len(self.paths)
+        #return len(self.paths)
+        return 100
