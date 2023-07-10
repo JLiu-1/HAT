@@ -1029,16 +1029,15 @@ class HAT_3D(nn.Module):
 
         if self.upsampler == 'pixelshuffle':
             # for classical SR
-            print("1",x.shape)
+         
             x = self.conv_first(x)
-            print("2",x.shape)
+         
             x = self.conv_after_body(self.forward_features(x)) + x
-            print("3",x.shape)
+            
             x = self.conv_before_upsample(x)
-            print("4",x.shape)
-            x=self.upsample(x)
-            print("5",x.shape)
-            x = self.conv_last(x)
+           
+           
+            x = self.conv_last(self.upsample(x))
 
         x = x / self.img_range + self.mean
 
