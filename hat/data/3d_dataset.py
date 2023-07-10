@@ -43,7 +43,6 @@ class Sci3DDataset(data.Dataset):
         # image range: [0, 1], float32.
         gt_path = self.paths[index]
         img_bytes = self.file_client.get(gt_path, 'gt')
-        img_gt = imfrombytes(img_bytes, float32=True)
         img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,self.size_z,1))
         gmax=np.max(img_gt)
         gmin=np.min(img_gt)
