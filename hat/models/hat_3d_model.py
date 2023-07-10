@@ -173,12 +173,14 @@ class HATModel_3D(SRModel):
             def _tonumpy(tensor,minmax=(0,1)):
 
 
-                tensor=(tensor-minmax[0])/(minmax[1]-minmax[0])
+                
                 print(tensor.shape)
                 img_np = tensor[0].numpy()
                 img_np = img_np.transpose(1, 2,3, 0)
                 img_np = np.squeeze(img_np, axis=3)
+
                 img_np = img_np.astype(np.float32)
+                img_np=(img_np-minmax[0])/(minmax[1]-minmax[0])
                 print(np.min(img_np),np.max(img_np))
                 return img_np
 
