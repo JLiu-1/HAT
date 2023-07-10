@@ -175,17 +175,18 @@ class HATModel_3D(SRModel):
 
                 tensor=(tensor-minmax[0])/(minmax[1]-minmax[0])
                 print(tensor.shape)
-                img_np = tensor.numpy()
+                img_np = tensor[0].numpy()
                 img_np = img_np.transpose(1, 2,3, 0)
                 img_np = np.squeeze(img_np, axis=3)
                 img_np = img_np.astype(np.float32)
+                print(np.min(img_np),np.max(img_np))
                 return img_np
 
 
-            sr_img = _tonumpy([visuals['result']][0],(lmin,lmax))
+            sr_img = _tonumpy([visuals['result']][0][0],(lmin,lmax))
             metric_data['img'] = sr_img
             if 'gt' in visuals:
-                gt_img = _tonumpy([visuals['gt']][0],(lmin,lmax))
+                gt_img = _tonumpy([visuals['gt']][0][0],(lmin,lmax))
                 metric_data['img2'] = gt_img
                 del self.gt
 
