@@ -383,7 +383,7 @@ class OCAB(nn.Module):
 
         # define a parameter table of relative position bias
         self.relative_position_bias_table = nn.Parameter(
-            torch.zeros((window_size + self.overlap_win_size - 1) * (window_size + self.overlap_win_size - 1), num_heads))  # 2*Wh-1 * 2*Ww-1, nH
+            torch.zeros((window_size + self.overlap_win_size - 1) * (window_size + self.overlap_win_size - 1) * (window_size + self.overlap_win_size - 1), num_heads))  # 2*Wh-1 * 2*Ww-1* 2*Wd-1, nH
 
         trunc_normal_(self.relative_position_bias_table, std=.02)
         self.softmax = nn.Softmax(dim=-1)
@@ -426,7 +426,7 @@ class OCAB(nn.Module):
         attn = (q @ k.transpose(-2, -1))
 
         relative_position_bias = self.relative_position_bias_table[rpi.view(-1)].view(
-            self.window_size * self.window_size, self.overlap_win_size * self.overlap_win_size, -1)  # ws*ws, wse*wse, nH
+            self.window_size * self.window_size* self.window_size, self.overlap_win_size * self.overlap_win_size* self.overlap_win_size, -1)  # ws*ws*ws, wse*wse*wse, nH
         relative_position_bias = relative_position_bias.permute(2, 0, 1).contiguous()  # nH, ws*ws, wse*wse
         attn = attn + relative_position_bias.unsqueeze(0)
         #how to modify? end
