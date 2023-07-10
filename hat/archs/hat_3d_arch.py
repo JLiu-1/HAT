@@ -7,7 +7,172 @@ from basicsr.utils.registry import ARCH_REGISTRY
 from basicsr.archs.arch_util import to_2tuple,to_3tuple, trunc_normal_
 
 from einops import rearrange
-from opacus.utils.tensor_utils import unfold3d
+#from opacus.utils.tensor_utils import unfold3d
+
+def filter_dilated_rows(
+    tensor: torch.Tensor,
+    dilation: Tuple[int, int, int],
+    dilated_kernel_size: Tuple[int, int, int],
+    kernel_size: Tuple[int, int, int],
+):
+    """
+    A helper function that removes extra rows created during the process of
+    implementing dilation.
+
+    Args:
+        tensor: A tensor containing the output slices resulting from unfolding
+                the input tensor to `unfold3d()`.
+                Shape is ``(B, C, D_out, H_out, W_out, dilated_kernel_size[0],
+                dilated_kernel_size[1], dilated_kernel_size[2])``.
+        dilation: The dilation given to `unfold3d()`.
+        dilated_kernel_size: The size of the dilated kernel.
+        kernel_size: The size of the kernel given to `unfold3d()`.
+
+    Returns:
+        A tensor of shape (B, C, D_out, H_out, W_out, kernel_size[0], kernel_size[1], kernel_size[2])
+        For D_out, H_out, W_out definitions see :class:`torch.nn.Unfold`.
+
+    Example:
+        >>> tensor = torch.zeros([1, 1, 3, 3, 3, 5, 5, 5])
+        >>> dilation = (2, 2, 2)
+        >>> dilated_kernel_size = (5, 5, 5)
+        >>> kernel_size = (3, 3, 3)
+        >>> filter_dilated_rows(tensor, dilation, dilated_kernel_size, kernel_size).shape
+        torch.Size([1, 1, 3, 3, 3, 3, 3, 3])
+    """
+
+    kernel_rank = len(kernel_size)
+
+    indices_to_keep = [
+        list(range(0, dilated_kernel_size[i], dilation[i])) for i in range(kernel_rank)
+    ]
+
+    tensor_np = tensor.numpy()
+
+    axis_offset = len(tensor.shape) - kernel_rank
+
+    for dim in range(kernel_rank):
+        tensor_np = np.take(tensor_np, indices_to_keep[dim], axis=axis_offset + dim)
+
+    return torch.Tensor(tensor_np)
+
+
+    
+def unfold3d(
+    tensor: torch.Tensor,
+    *,
+    kernel_size: Union[int, Tuple[int, int, int]],
+    padding: Union[int, Tuple[int, int, int]] = 0,
+    stride: Union[int, Tuple[int, int, int]] = 1,
+    dilation: Union[int, Tuple[int, int, int]] = 1,
+):
+    r"""
+    Extracts sliding local blocks from an batched input tensor.
+
+    :class:`torch.nn.Unfold` only supports 4D inputs (batched image-like tensors).
+    This method implements the same action for 5D inputs
+
+    Args:
+        tensor: An input tensor of shape ``(B, C, D, H, W)``.
+        kernel_size: the size of the sliding blocks
+        padding: implicit zero padding to be added on both sides of input
+        stride: the stride of the sliding blocks in the input spatial dimensions
+        dilation: the spacing between the kernel points.
+
+    Returns:
+        A tensor of shape ``(B, C * np.product(kernel_size), L)``, where L - output spatial dimensions.
+        See :class:`torch.nn.Unfold` for more details
+
+    Example:
+        >>> B, C, D, H, W = 3, 4, 5, 6, 7
+        >>> tensor = torch.arange(1, B*C*D*H*W + 1.).view(B, C, D, H, W)
+        >>> unfold3d(tensor, kernel_size=2, padding=0, stride=1).shape
+        torch.Size([3, 32, 120])
+    """
+
+    if len(tensor.shape) != 5:
+        raise ValueError(
+            f"Input tensor must be of the shape [B, C, D, H, W]. Got{tensor.shape}"
+        )
+
+    if isinstance(kernel_size, int):
+        kernel_size = (kernel_size, kernel_size, kernel_size)
+
+    if isinstance(padding, int):
+        padding = (padding, padding, padding)
+
+    if isinstance(stride, int):
+        stride = (stride, stride, stride)
+
+    if isinstance(dilation, int):
+        dilation = (dilation, dilation, dilation)
+
+    if padding == "same":
+        total_pad_D = dilation[0] * (kernel_size[0] - 1)
+        total_pad_H = dilation[1] * (kernel_size[1] - 1)
+        total_pad_W = dilation[2] * (kernel_size[2] - 1)
+        pad_D_left = math.floor(total_pad_D / 2)
+        pad_D_right = total_pad_D - pad_D_left
+        pad_H_left = math.floor(total_pad_H / 2)
+        pad_H_right = total_pad_H - pad_H_left
+        pad_W_left = math.floor(total_pad_W / 2)
+        pad_W_right = total_pad_W - pad_W_left
+
+    elif padding == "valid":
+        pad_D_left, pad_D_right, pad_W_left, pad_W_right, pad_H_left, pad_H_right = (
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+        )
+    else:
+        pad_D_left, pad_D_right, pad_H_left, pad_H_right, pad_W_left, pad_W_right = (
+            padding[0],
+            padding[0],
+            padding[1],
+            padding[1],
+            padding[2],
+            padding[2],
+        )
+
+    batch_size, channels, _, _, _ = tensor.shape
+
+    # Input shape: (B, C, D, H, W)
+    tensor = F.pad(
+        tensor,
+        (pad_W_left, pad_W_right, pad_H_left, pad_H_right, pad_D_left, pad_D_right),
+    )
+    # Output shape: (B, C, D+pad_W_left+pad_W_right, H+pad_H_left+pad_H_right, W+pad_D_left+pad_D_right)
+
+    dilated_kernel_size = (
+        kernel_size[0] + (kernel_size[0] - 1) * (dilation[0] - 1),
+        kernel_size[1] + (kernel_size[1] - 1) * (dilation[1] - 1),
+        kernel_size[2] + (kernel_size[2] - 1) * (dilation[2] - 1),
+    )
+
+    tensor = tensor.unfold(dimension=2, size=dilated_kernel_size[0], step=stride[0])
+    tensor = tensor.unfold(dimension=3, size=dilated_kernel_size[1], step=stride[1])
+    tensor = tensor.unfold(dimension=4, size=dilated_kernel_size[2], step=stride[2])
+
+    if dilation != (1, 1, 1):
+        tensor = filter_dilated_rows(tensor, dilation, dilated_kernel_size, kernel_size)
+
+    # Output shape: (B, C, D_out, H_out, W_out, kernel_size[0], kernel_size[1], kernel_size[2])
+    # For D_out, H_out, W_out definitions see :class:`torch.nn.Unfold`
+
+    tensor = tensor.permute(0, 2, 3, 4, 1, 5, 6, 7)
+    # Output shape: (B, D_out, H_out, W_out, C, kernel_size[0], kernel_size[1], kernel_size[2])
+
+    tensor = tensor.reshape(batch_size, -1, channels * np.prod(kernel_size)).transpose(
+        1, 2
+    )
+    # Output shape: (B, D_out * H_out * W_out, C * kernel_size[0] * kernel_size[1] * kernel_size[2]
+
+    return tensor
+
+
 def drop_path(x, drop_prob: float = 0., training: bool = False):
     """Drop paths (Stochastic Depth) per sample (when applied in main path of residual blocks).
 
