@@ -451,7 +451,7 @@ class OCAB(nn.Module):
         #
         # merge windows
         attn_windows = attn_windows.view(-1, self.window_size, self.window_size, self.window_size, self.dim)
-        print("attn_windows",attn_windows)
+        print("attn_windows",attn_windows.shape)
         x = window_reverse(attn_windows, self.window_size, h, w,d)  # b h w d c
         x = x.view(b, h * w*d, self.dim)
 
