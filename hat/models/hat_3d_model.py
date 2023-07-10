@@ -157,8 +157,8 @@ class HATModel_3D(SRModel):
         for idx, val_data in enumerate(dataloader):
             img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
 
-            lmax=val_data['lmax'][0].to_numpy() if 'lmax' in val_data else 1
-            lmin=val_data['lmin'][0].to_numpy() if 'lmin' in val_data else 0
+            lmax=val_data['lmax'][0].item() if 'lmax' in val_data else 1
+            lmin=val_data['lmin'][0].item() if 'lmin' in val_data else 0
             #print("val",lmin,lmax)
             self.feed_data(val_data)
 
