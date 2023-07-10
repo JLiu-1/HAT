@@ -124,15 +124,13 @@ def window_reverse(windows, window_size, h, w,d):
     Returns:
         x: (b, h, w, d,c)
     """
-    print(windows.shape)
-    print(window_size)
-    print(h,w,d)
+  
     b = int(windows.shape[0] / (h * w *d/ window_size / window_size/window_size))
-    print(b)
+   
     x = windows.view(b, h // window_size, w // window_size, d//window_size,window_size,window_size, window_size, -1)
-    print(x.shape)
+   
     x = x.permute(0, 1, 4, 2,5, 3,6, 7).contiguous().view(b, h, w, d,-1)
-    print(x.shape)
+   
     return x
 
 
@@ -274,7 +272,7 @@ class HAB(nn.Module):
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=act_layer, drop=drop)
 
     def forward(self, x, x_size, rpi_sa, attn_mask):
-        print("HAB x_size",x_size)
+      
         h, w ,d= x_size
         b, _, c = x.shape
         # assert seq_len == h * w*d, "input feature has wrong size"
@@ -405,7 +403,7 @@ class OCAB(nn.Module):
         self.mlp = Mlp(in_features=dim, hidden_features=mlp_hidden_dim, act_layer=nn.GELU)
 
     def forward(self, x, x_size, rpi):
-        print("OCAB x_size",x_size)
+       
         h, w,d = x_size
         b, _, c = x.shape
 
@@ -414,30 +412,29 @@ class OCAB(nn.Module):
         x = x.view(b, h, w,d, c)
 
         qkv = self.qkv(x).reshape(b, h, w, d,3, c).permute(4, 0, 5, 1, 2,3) # 3, b, c, h, w,d
-        print("qkv",qkv.shape)
+      
         q = qkv[0].permute(0, 2, 3, 4,1) # b, h, w, d,c
-        print("q",q.shape)
+      
         kv = torch.cat((qkv[1], qkv[2]), dim=1) # b, 2*c, h, w,d
-        print("kv",kv.shape)
-
+      
         # partition windows
         q_windows = window_partition(q, self.window_size)  # nw*b, window_size, window_size, self.window_size, c
-        print("q_windows",kv.shape)
+      
         q_windows = q_windows.view(-1, self.window_size * self.window_size * self.window_size, c)  # nw*b, window_size*window_size*window_size, c
         kv_windows=unfold3d(kv,kernel_size=(self.overlap_win_size, self.overlap_win_size, self.overlap_win_size), padding=(self.overlap_win_size-self.window_size)//2, stride=self.window_size)
         #kv_windows = self.unfold(kv) # b, c*w*w*w, nw
         # how to modify?
-        print("kv_windows",kv_windows.shape)
+       
         kv_windows = rearrange(kv_windows, 'b (nc ch owh oww owd) nw -> nc (b nw) (owh oww owd) ch', nc=2, ch=c, owh=self.overlap_win_size, oww=self.overlap_win_size, owd=self.overlap_win_size).contiguous() # 2, nw*b, ow*ow*ow, c
-        print("kv_windows2",kv_windows.shape)
+      
         k_windows, v_windows = kv_windows[0], kv_windows[1] # nw*b, ow*ow*ow, c
-        print("k_windows",k_windows.shape)
+        
         b_, nq, _ = q_windows.shape
         _, n, _ = k_windows.shape
-        d = self.dim // self.num_heads
-        q = q_windows.reshape(b_, nq, self.num_heads, d).permute(0, 2, 1, 3) # nw*b, nH, nq, d
-        k = k_windows.reshape(b_, n, self.num_heads, d).permute(0, 2, 1, 3) # nw*b, nH, n, d
-        v = v_windows.reshape(b_, n, self.num_heads, d).permute(0, 2, 1, 3) # nw*b, nH, n, d
+        dd = self.dim // self.num_heads
+        q = q_windows.reshape(b_, nq, self.num_heads, dd).permute(0, 2, 1, 3) # nw*b, nH, nq, dd
+        k = k_windows.reshape(b_, n, self.num_heads, dd).permute(0, 2, 1, 3) # nw*b, nH, n, dd
+        v = v_windows.reshape(b_, n, self.num_heads, dd).permute(0, 2, 1, 3) # nw*b, nH, n, dd
 
         q = q * self.scale
         attn = (q @ k.transpose(-2, -1))
@@ -448,12 +445,12 @@ class OCAB(nn.Module):
         attn = attn + relative_position_bias.unsqueeze(0)
         #how to modify? end
         attn = self.softmax(attn)
-        print("attn",attn.shape)
+       
         attn_windows = (attn @ v).transpose(1, 2).reshape(b_, nq, self.dim)
         #
         # merge windows
         attn_windows = attn_windows.view(-1, self.window_size, self.window_size, self.window_size, self.dim)
-        print("attn_windows",attn_windows.shape)
+       
         x = window_reverse(attn_windows, self.window_size, h, w,d)  # b h w d c
         x = x.view(b, h * w*d, self.dim)
 
@@ -549,7 +546,7 @@ class AttenBlocks(nn.Module):
             self.downsample = None
 
     def forward(self, x, x_size, params):
-        print("ATB x_size",x_size)
+       
         for blk in self.blocks:
             x = blk(x, x_size, params['rpi_sa'], params['attn_mask'])
 
@@ -642,7 +639,7 @@ class RHAG(nn.Module):
             img_size=img_size, patch_size=patch_size, in_chans=0, embed_dim=dim, norm_layer=None)
 
     def forward(self, x, x_size, params):
-        print("RHAG x_size",x_size)
+       
         return self.patch_embed(self.conv(self.patch_unembed(self.residual_group(x, x_size, params), x_size))) + x
 
 
@@ -707,7 +704,7 @@ class PatchUnEmbed(nn.Module):
         self.embed_dim = embed_dim
 
     def forward(self, x, x_size):
-        print("PUE",x_size)
+     
         x = x.transpose(1, 2).contiguous().view(x.shape[0], self.embed_dim, x_size[0], x_size[1],x_size[2])  # b Ph*Pw*Pd c
         return x
 
@@ -947,7 +944,7 @@ class HAT_3D(nn.Module):
         return relative_position_index
 
     def calculate_mask(self, x_size):
-        print("H3DCM x_size",x_size)
+        
         # calculate attention mask for SW-MSA
         h, w,d = x_size
         img_mask = torch.zeros((1, h, w, d,1))  # 1 h w d 1
@@ -982,7 +979,7 @@ class HAT_3D(nn.Module):
     def forward_features(self, x):
         
         x_size = (x.shape[2], x.shape[3],x.shape[4])
-        print("H3D FF",x_size)
+      
 
         # Calculate attention mask and relative position index in advance to speed up inference. 
         # The original code is very time-cosuming for large window size.
