@@ -48,8 +48,8 @@ class Sci3DTestDataset(data.Dataset):
         lmin=np.min(img_lq)
         if lmax!=lmin:
             img_lq=(img_lq-lmin)/(lmax-lmin)
-        print(lmin,lmax)
-        print(np.min(img_lq),np.max(img_lq))
+        #print(lmin,lmax)
+        #print(np.min(img_lq),np.max(img_lq))
         # modcrop
 
         size_h, size_w,size_d, _ = img_lq.shape

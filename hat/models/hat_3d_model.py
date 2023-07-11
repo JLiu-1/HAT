@@ -174,15 +174,15 @@ class HATModel_3D(SRModel):
 
 
                 
-                print(tensor.shape)
+                #print(tensor.shape)
                 img_np = tensor[0].numpy()
                 img_np = img_np.transpose(1, 2,3, 0)
                 img_np = np.squeeze(img_np, axis=3)
 
                 img_np = img_np.astype(np.float32)
-                print(np.min(img_np),np.max(img_np))
+                #print(np.min(img_np),np.max(img_np))
                 img_np=img_np*(minmax[1]-minmax[0])+minmax[0]
-                print(np.min(img_np),np.max(img_np))
+                #print(np.min(img_np),np.max(img_np))
                 return img_np
 
 
