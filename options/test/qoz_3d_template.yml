@@ -11,7 +11,7 @@ tile: # use the tile mode for limited GPU memory when testing.
 datasets:
   test_1:  # the 1st test dataset
     name:  qoz
-    type:  Sci3DDataset
+    type:  Sci3DTestDataset
     dataroot_lq:  ./datasets/qoz
     size_x: 
     size_y: 
