@@ -81,8 +81,8 @@ class Sci2DDataset(data.Dataset):
             # random crop
             img_gt, img_lq = paired_random_crop(img_gt, img_lq, gt_size, scale, gt_path)#to customize
 
-            print(img_gt.shape)
-            print(img_lq.shape)
+            #print(img_gt.shape)
+            #print(img_lq.shape)
             #flip, rotation
             #img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])#to customize
         '''
