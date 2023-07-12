@@ -141,6 +141,8 @@ class HATModel(SRModel):
                 os.makedirs(save_img_dir)
         for idx, val_data in enumerate(dataloader):
             img_name = osp.splitext(osp.basename(val_data['lq_path'][0]))[0]
+            lmax=val_data['max'][0].item() if 'max' in val_data else 1
+            lmin=val_data['min'][0].item() if 'min' in val_data else 0
             self.feed_data(val_data)
 
             self.pre_process()
@@ -152,6 +154,7 @@ class HATModel(SRModel):
 
             visuals = self.get_current_visuals()
             sr_img = tensor2img([visuals['result']],rgb2bgr=False, out_type=np.float32)
+            sr_img=sr_img*(lmax-lmin)+lmin
             metric_data['img'] = sr_img
             if 'gt' in visuals:
                 gt_img = tensor2img([visuals['gt']],rgb2bgr=False, out_type=np.float32)
