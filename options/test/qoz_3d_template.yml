@@ -76,7 +76,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: ./experiments/train_HAT_SRx2_3D_normal_nyxdmd/models/net_g_80000.pth
+  pretrain_network_g: ./experiments/train_HAT_SRx2_3D_nyx_normal_size/models/net_g_latest.pth
   strict_load_g: true
   param_key_g: 'params_ema'
 
