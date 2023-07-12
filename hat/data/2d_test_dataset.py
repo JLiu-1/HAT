@@ -15,7 +15,7 @@ from basicsr.utils.registry import DATASET_REGISTRY
 class Sci2DDataset(data.Dataset):
     
     def __init__(self, opt):
-        super(Sci2DDataset, self).__init__()
+        super(Sci2DTestDataset, self).__init__()
         self.opt = opt
         # file client (io backend)
         self.file_client = None
