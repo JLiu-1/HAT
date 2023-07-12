@@ -29,6 +29,8 @@ class Sci3DDataset(data.Dataset):
         self.size_x=opt['size_x'] if 'size_x' in opt else 64
         self.size_y=opt['size_y'] if 'size_y' in opt else 64
         self.size_z=opt['size_z'] if 'size_z' in opt else 64
+        self.max=opt['global_max'] if 'global_max' in opt else None
+        self.min=opt['global_min'] if 'global_min' in opt else None
 
       
         self.paths = sorted(list(scandir(self.gt_folder, full_path=True)))
@@ -44,8 +46,8 @@ class Sci3DDataset(data.Dataset):
         gt_path = self.paths[index]
         img_bytes = self.file_client.get(gt_path, 'gt')
         img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,self.size_z,1))
-        gmax=np.max(img_gt)
-        gmin=np.min(img_gt)
+        gmax=np.max(img_gt) if self.max is None else self.max
+        gmin=np.min(img_gt) if self.min is None else self.min
         if gmax!=gmin:
             img_gt=(img_gt-gmin)/(gmax-gmin)
 
@@ -109,7 +111,7 @@ class Sci3DDataset(data.Dataset):
 
         def _totensor(img):
         
-            img = torch.from_numpy(img.transpose(3, 0, 1,2))
+            img = torch.from_numpy(np.array(img.transpose(3, 0, 1,2)))
             
             img = img.float()
             return img
@@ -124,7 +126,7 @@ class Sci3DDataset(data.Dataset):
          #   normalize(img_lq, self.mean, self.std, inplace=True)
          #   normalize(img_gt, self.mean, self.std, inplace=True)
 
-        return {'lq': img_lq, 'gt': img_gt, 'gt_path': gt_path,'lq_path': gt_path}#temp
+        return {'lq': img_lq, 'gt': img_gt, 'gt_path': gt_path,'lq_path': gt_path,'max':gmax,'min':gmin}#temp
 
     def __len__(self):
         return len(self.paths)
