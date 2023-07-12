@@ -30,7 +30,7 @@ class Sci2DTestDataset(data.Dataset):
         self.min=opt['global_min'] if 'global_min' in opt else None
 
        
-        self.paths = sorted(list(scandir(self.gt_folder, full_path=True)))
+        self.paths = sorted(list(scandir(self.lq_folder, full_path=True)))
 
     def __getitem__(self, index):
         if self.file_client is None:
