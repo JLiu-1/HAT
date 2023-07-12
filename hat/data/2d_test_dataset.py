@@ -12,7 +12,7 @@ from basicsr.utils.registry import DATASET_REGISTRY
 
 
 @DATASET_REGISTRY.register()
-class Sci2DDataset(data.Dataset):
+class Sci2DTestDataset(data.Dataset):
     
     def __init__(self, opt):
         super(Sci2DTestDataset, self).__init__()
