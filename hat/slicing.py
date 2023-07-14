@@ -10,7 +10,7 @@ size_z=eval(sys.argv[5])#lr
 scale=eval(sys.argv[6])
 if not os.path.exists(ofolder):
     os.makedirs(ofolder)
-arr=np.fromfile(ifile,dtype).reshape((size_x,size_y,size_z))
+arr=np.fromfile(ifile,dtype=np.float32).reshape((size_x,size_y,size_z))
 
 for x in range(size_x):
     ofile="x_%d.dat" %(x*scale)
