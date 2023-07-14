@@ -8,6 +8,8 @@ size_x=eval(sys.argv[3])#lr
 size_y=eval(sys.argv[4])#lr
 size_z=eval(sys.argv[5])#lr
 scale=eval(sys.argv[6])
+if not os.path.exists(ofolder):
+    os.makedirs(ofolder)
 arr=np.fromfile(ifile,dtype).reshape((size_x,size_y,size_z))
 
 for x in range(size_x):
