@@ -15,6 +15,7 @@ datasets:
     dataroot_lq:  ./datasets/qoz
     size_x: 
     size_y: 
+    size_z:
     #global_max: 4070
     #global_min: 0
     #dataroot_lq: ./datasets/Set5/LRbicx2
@@ -76,7 +77,7 @@ network_g:
 
 # path
 path:
-  pretrain_network_g: ./experiments/train_HAT_SRx2_nstx/models/net_g_latest.pth
+  pretrain_network_g: ./experiments/train_HAT_SRx2_2D_normal_nyxbdlog/models/net_g_latest.pth
   strict_load_g: true
   param_key_g: 'params_ema'
 
