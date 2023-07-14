@@ -14,19 +14,19 @@ arr=np.fromfile(ifile,dtype=np.float32).reshape((size_x,size_y,size_z))
 
 for x in range(size_x):
     ofile="x_%d.dat" %(x*scale)
-    opath=os.path.join(ofolder,opath)
+    opath=os.path.join(ofolder,ofile)
 
     arr[x,:,:].tofile(opath)
 
 for y in range(size_y):
     ofile="y_%d.dat" %(y*scale)
-    opath=os.path.join(ofolder,opath)
+    opath=os.path.join(ofolder,ofile)
 
     arr[:,y,:].tofile(opath)
 
 for z in range(size_z):
     ofile="z_%d.dat" %(z*scale)
-    opath=os.path.join(ofolder,opath)
+    opath=os.path.join(ofolder,ofile)
 
     arr[:,:,z].tofile(opath)
 
