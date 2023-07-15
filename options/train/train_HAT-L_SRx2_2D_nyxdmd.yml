@@ -21,8 +21,8 @@ datasets:
 
     gt_size: 128
 
-    #use_hflip: true
-    #use_rot: true
+    use_hflip: true
+    use_rot: true
 
     # data loader
     use_shuffle: true
