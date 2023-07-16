@@ -28,6 +28,9 @@ class Sci2DDataset(data.Dataset):
         self.size_y=opt['size_y'] if 'size_y' in opt else 480
         self.max=opt['global_max'] if 'global_max' in opt else None
         self.min=opt['global_min'] if 'global_min' in opt else None
+        self.use_hflip=opt['use_hflip'] if 'use_hflip' in opt else False
+        self.use_rot=opt['use_rot'] if 'use_rot' in opt else False
+
 
         if self.io_backend_opt['type'] == 'lmdb':
             self.io_backend_opt['db_paths'] = [self.gt_folder]
@@ -84,7 +87,8 @@ class Sci2DDataset(data.Dataset):
             #print(img_gt.shape)
             #print(img_lq.shape)
             #flip, rotation
-            img_gt, img_lq = augment([img_gt, img_lq], self.opt['use_hflip'], self.opt['use_rot'])#to customize
+            if self.use_hflip or self.use_rot:
+                img_gt, img_lq = augment([img_gt, img_lq], self.use_hflip, self.use_rot)#to customize
         '''
         # color space transform
         if 'color' in self.opt and self.opt['color'] == 'y':
