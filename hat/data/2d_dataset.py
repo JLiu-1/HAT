@@ -64,9 +64,9 @@ class Sci2DDataset(data.Dataset):
             img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
         else:
             filename=osp.basename(gt_path)
-            if gt_path[0]=='y':
+            if filename[0]=='y':
                 img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_z,1))
-            elif gt_path[0]=='x':
+            elif filename[0]=='x':
                 img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_y,self.size_z,1))
             else:
                 img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
