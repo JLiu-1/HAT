@@ -31,6 +31,12 @@ class Sci2DDataset(data.Dataset):
         self.use_hflip=opt['use_hflip'] if 'use_hflip' in opt else False
         self.use_rot=opt['use_rot'] if 'use_rot' in opt else False
 
+        self.slices_from_3d=False
+        self.size_z=None
+        if 'size_z' in opt:
+            self.slices_from_3d=True;
+            self.size_z=opt['size_z'] 
+
 
         if self.io_backend_opt['type'] == 'lmdb':
             self.io_backend_opt['db_paths'] = [self.gt_folder]
@@ -54,7 +60,16 @@ class Sci2DDataset(data.Dataset):
         gt_path = self.paths[index]
         img_bytes = self.file_client.get(gt_path, 'gt')
         #img_gt = imfrombytes(img_bytes, float32=True)
-        img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
+        if not self.slices_from_3d:
+            img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
+        else:
+            filename=os.path.basename(gt_path)
+            if gt_path[0]=='y':
+                img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_z,1))
+            elif gt_path[0]=='x':
+                img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_y,self.size_z,1))
+            else:
+                img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
         gmax=np.max(img_gt) if self.max is None else self.max
         gmin=np.min(img_gt) if self.min is None else self.min
         if gmax!=gmin:
