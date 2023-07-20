@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_qrain
+name: train_HAT_SRx2_2D_qsnow
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -8,9 +8,9 @@ manual_seed: 0
 # dataset and data loader settings
 datasets:
   train:
-    name: qrainlog_2dslices
+    name: qsnowlog_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/qrainlog_2dslices
+    dataroot_gt: ./datasets/qsnowlog_2dslices
     size_x: 100
     size_y: 500
     size_z: 500
