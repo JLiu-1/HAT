@@ -29,6 +29,12 @@ class Sci2DTestDataset(data.Dataset):
         self.max=opt['global_max'] if 'global_max' in opt else None
         self.min=opt['global_min'] if 'global_min' in opt else None
 
+        self.slices_from_3d=False
+        self.size_z=None
+        if 'size_z' in opt:
+            self.slices_from_3d=True;
+            self.size_z=opt['size_z'] 
+
        
         self.paths = sorted(list(scandir(self.lq_folder, full_path=True)))
 
@@ -44,7 +50,16 @@ class Sci2DTestDataset(data.Dataset):
         lq_path = self.paths[index]
         img_bytes = self.file_client.get(lq_path, 'lq')
         #img_gt = imfrombytes(img_bytes, float32=True)
-        img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
+        if not self.slices_from_3d:
+            img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
+        else:
+            filename=os.path.basename(lq_path)
+            if lq_path[0]=='y':
+                img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_z,1))
+            elif lq_path[0]=='x':
+                img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_y,self.size_z,1))
+            else:
+                img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
         lmax=np.max(img_lq) if self.max is None else self.max
         lmin=np.min(img_lq) if self.min is None else self.min
         if lmax!=lmin:
