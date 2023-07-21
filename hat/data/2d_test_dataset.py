@@ -54,9 +54,9 @@ class Sci2DTestDataset(data.Dataset):
             img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
         else:
             filename=os.path.basename(lq_path)
-            if lq_path[0]=='y':
+            if filename[0]=='y':
                 img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_z,1))
-            elif lq_path[0]=='x':
+            elif filename[0]=='x':
                 img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_y,self.size_z,1))
             else:
                 img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
