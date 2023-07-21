@@ -53,7 +53,7 @@ class Sci2DTestDataset(data.Dataset):
         if not self.slices_from_3d:
             img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
         else:
-            filename=os.path.basename(lq_path)
+            filename=osp.basename(lq_path)
             if filename[0]=='y':
                 img_lq=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_z,1))
             elif filename[0]=='x':
