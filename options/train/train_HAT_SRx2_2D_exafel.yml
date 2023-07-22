@@ -19,6 +19,8 @@ datasets:
       type: disk
 
     gt_size: 128
+    size_x: 480
+    size_y: 388
 
     #use_hflip: true
     #use_rot: true
