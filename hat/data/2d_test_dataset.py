@@ -73,7 +73,7 @@ class Sci2DTestDataset(data.Dataset):
 
         # augmentation for training
         
-        img_lq = img2tensor(img_lq, bgr2rgb=False, float32=True)
+        img_lq = img2tensor(np.array(img_lq), bgr2rgb=False, float32=True)
         # normalize
         if self.mean is not None or self.std is not None:
             normalize(img_lq, self.mean, self.std, inplace=True)
