@@ -30,6 +30,8 @@ class Sci2DDataset(data.Dataset):
         self.min=opt['global_min'] if 'global_min' in opt else None
         self.use_hflip=opt['use_hflip'] if 'use_hflip' in opt else False
         self.use_rot=opt['use_rot'] if 'use_rot' in opt else False
+        self.dyna_dim=opt['dyna_dim'] if 'dyna_dim' in opt else False
+
 
         self.slices_from_3d=False
         self.size_z=None
@@ -60,7 +62,14 @@ class Sci2DDataset(data.Dataset):
         gt_path = self.paths[index]
         img_bytes = self.file_client.get(gt_path, 'gt')
         #img_gt = imfrombytes(img_bytes, float32=True)
-        if not self.slices_from_3d:
+        if self.dyna_dim:
+            filename=os.path.splitext(osp.basename(gt_path))[0]
+            templist=filename.split('_')
+            dim_x=int(templist[-2])
+            dim_y=int(templist[-1])
+            img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((dim_x,dim_y,1))
+
+        elif not self.slices_from_3d:
             img_gt=np.frombuffer(img_bytes,dtype=np.float32).reshape((self.size_x,self.size_y,1))
         else:
             filename=osp.basename(gt_path)

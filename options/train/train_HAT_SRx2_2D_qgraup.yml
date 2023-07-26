@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_qgraup
+name: train_HAT_SRx2_2D_qgraup_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -127,7 +127,7 @@ val:
 # logging settings
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 1e4
+  save_checkpoint_freq: !!float 2e4
   use_tb_logger: true
   wandb:
     project: ~
