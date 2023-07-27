@@ -63,7 +63,7 @@ class Sci2DDataset(data.Dataset):
         img_bytes = self.file_client.get(gt_path, 'gt')
         #img_gt = imfrombytes(img_bytes, float32=True)
         if self.dyna_dim:
-            filename=os.path.splitext(osp.basename(gt_path))[0]
+            filename=osp.splitext(osp.basename(gt_path))[0]
             templist=filename.split('_')
             dim_x=int(templist[-2])
             dim_y=int(templist[-1])

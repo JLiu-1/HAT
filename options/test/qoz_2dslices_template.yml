@@ -93,5 +93,5 @@ val:
 #      test_y_channel: true
 #    ssim:
 #      type: calculate_ssim
-#      crop_border: 2
+#      crop_border: 2W
 #      test_y_channel: true
