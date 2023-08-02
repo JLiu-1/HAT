@@ -1,5 +1,5 @@
 # general settings
-name: train_HATsin_SRx2_2D_cldhgh_200k
+name: train_HATsin_SRx2_2D_freqsh_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -8,9 +8,9 @@ manual_seed: 0
 # dataset and data loader settings
 datasets:
   train:
-    name: cldhgh
+    name: freqsh
     type: Sci2DDataset
-    dataroot_gt: ./datasets/CLDHGH
+    dataroot_gt: ./datasets/FREQSH
   
 
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub

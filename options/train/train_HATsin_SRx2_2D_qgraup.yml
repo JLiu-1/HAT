@@ -1,5 +1,5 @@
 # general settings
-name: train_HATsin_SRx2_2D_cldhgh_200k
+name: train_HATsin_SRx2_2D_qgraup_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -8,19 +8,19 @@ manual_seed: 0
 # dataset and data loader settings
 datasets:
   train:
-    name: cldhgh
+    name: qgrauplog_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/CLDHGH
-  
+    dataroot_gt: ./datasets/qgrauplog_2dslices
+    size_x: 100
+    size_y: 500
+    size_z: 500
 
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
       type: disk
 
-    gt_size: 128
-    size_x: 480
-    size_y: 480
+    gt_size: 96
 
     #use_hflip: true
     #use_rot: true
@@ -63,7 +63,7 @@ network_g:
   type: HAT_Sin
   upscale: 2
   in_chans: 1
-  img_size: 64
+  img_size: 48
   window_size: 16
   compress_ratio: 3
   squeeze_factor: 30

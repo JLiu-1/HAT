@@ -1,5 +1,5 @@
 # general settings
-name: train_HATsin_SRx2_2D_cldhgh_200k
+name: train_HATsin_SRx2_2D_ocean_tmxl_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -8,9 +8,9 @@ manual_seed: 0
 # dataset and data loader settings
 datasets:
   train:
-    name: cldhgh
+    name: ocean_tmxl
     type: Sci2DDataset
-    dataroot_gt: ./datasets/CLDHGH
+    dataroot_gt: ./datasets/ocean_tmxl
   
 
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
@@ -19,8 +19,6 @@ datasets:
       type: disk
 
     gt_size: 128
-    size_x: 480
-    size_y: 480
 
     #use_hflip: true
     #use_rot: true
