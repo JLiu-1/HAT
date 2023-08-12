@@ -31,6 +31,16 @@ class Sci3DDataset(data.Dataset):
         self.size_z=opt['size_z'] if 'size_z' in opt else 64
         self.max=opt['global_max'] if 'global_max' in opt else None
         self.min=opt['global_min'] if 'global_min' in opt else None
+        if 'noise_rate' in opt:
+            self.noise_rate=opt['noise_rate'] 
+            if 'noise_type' in opt:
+                self.noise_type=opt['noise_type']
+            else:
+                self.noise_type='uniform'
+        else:
+            self.noise_rate=0
+            self.noise_type=None 
+
 
       
         self.paths = sorted(list(scandir(self.gt_folder, full_path=True)))
@@ -66,6 +76,10 @@ class Sci3DDataset(data.Dataset):
         #img_lq = imresize(img_gt, 1 / scale)
         img_lq=img_gt[::scale,::scale,::scale,:]
 
+        
+
+
+
 
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
@@ -84,6 +98,12 @@ class Sci3DDataset(data.Dataset):
         
             img_gt=img_gt[scale*x_start:scale*x_start+gt_size,scale*y_start:scale*y_start+gt_size,scale*z_start:scale*z_start+gt_size,:]
             img_lq=img_gt[::scale,::scale,::scale,:]
+            if self.noise_rate!=0:
+                rng=gmax-gmin
+                if self.noise_type=='uniform':
+                    img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
+                else:
+                    img_lq+=np.random.normal(loc=0.0,scale=rng*self.noise_rate,size=img_lq.shape)
             
 
 
