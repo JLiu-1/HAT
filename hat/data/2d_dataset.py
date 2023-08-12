@@ -39,6 +39,16 @@ class Sci2DDataset(data.Dataset):
             self.slices_from_3d=True;
             self.size_z=opt['size_z'] 
 
+        if 'noise_rate' in opt:
+            self.noise_rate=opt['noise_rate'] 
+            if 'noise_type' in opt:
+                self.noise_type=opt['noise_type']
+            else:
+                self.noise_type='uniform'
+        else:
+            self.noise_rate=0
+            self.noise_type=None 
+
 
         if self.io_backend_opt['type'] == 'lmdb':
             self.io_backend_opt['db_paths'] = [self.gt_folder]
@@ -101,6 +111,12 @@ class Sci2DDataset(data.Dataset):
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
         img_lq = np.ascontiguousarray(img_lq, dtype=np.float32)
+        if self.noise_rate!=0 and self.opt['phase'] == 'train':
+            rng=gmax-gmin
+            if self.noise_type=='uniform':
+                img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
+            else:
+                img_lq+=np.random.normal(loc=0.0,scale=rng*self.noise_rate,size=img_lq.shape)
 
         # augmentation for training
         if self.opt['phase'] == 'train':

@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_nyxdmdlog_200k
+name: train_HAT_SRx2_2D_ocean_xmxl_uninoise1e-3_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -8,19 +8,20 @@ manual_seed: 0
 # dataset and data loader settings
 datasets:
   train:
-    name: nyx_dmdlog_2dslices
+    name: ocean_xmxl
     type: Sci2DDataset
-    dataroot_gt: ./datasets/NYX_dmdlog_2dslices
-    size_x: 512
-    size_y: 512
-
+    dataroot_gt: ./datasets/ocean_xmxl
   
+
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
       type: disk
 
     gt_size: 128
+
+    noise_rate: !!float 1e-3
+    noise_type: uniform
 
     #use_hflip: true
     #use_rot: true
@@ -108,7 +109,7 @@ train:
 
 #validation settings
 val:
-  val_freq: !!float 5e3
+  val_freq: !!float 1e4
   save_img: false
   pbar: False
 

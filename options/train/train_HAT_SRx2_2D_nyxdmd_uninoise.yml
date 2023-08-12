@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_nyxdmdlog_200k
+name: train_HAT_SRx2_2D_nyxdmdlog_uninoise1e-3_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -14,7 +14,9 @@ datasets:
     size_x: 512
     size_y: 512
 
-  
+    noise_rate: !!float 1e-3
+    noise_type: uniform
+
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
