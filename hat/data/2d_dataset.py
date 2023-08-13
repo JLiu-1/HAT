@@ -126,8 +126,9 @@ class Sci2DDataset(data.Dataset):
             if self.noise_rate!=0:
 
                 rng=gmax-gmin
-                if self.noise_rate!=1e-3:
-                    print(self.noise_rate,rng,self.noise_type)
+
+                #if self.noise_rate!=1e-3:
+                #    print(self.noise_rate,rng,self.noise_type)
                 if self.noise_type=='uniform':
                     img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
                 else:
