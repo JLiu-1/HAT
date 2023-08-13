@@ -111,13 +111,7 @@ class Sci2DDataset(data.Dataset):
 
         img_gt = np.ascontiguousarray(img_gt, dtype=np.float32)
         img_lq = np.ascontiguousarray(img_lq, dtype=np.float32)
-        if self.noise_rate!=0 and self.opt['phase'] == 'train':
-            rng=gmax-gmin
-            if self.noise_type=='uniform':
-                img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
-            else:
-                img_lq+=np.random.normal(loc=0.0,scale=rng*self.noise_rate,size=img_lq.shape)
-
+        
         # augmentation for training
         if self.opt['phase'] == 'train':
             gt_size = self.opt['gt_size']
@@ -129,6 +123,15 @@ class Sci2DDataset(data.Dataset):
             #flip, rotation
             if self.use_hflip or self.use_rot:
                 img_gt, img_lq = augment([img_gt, img_lq], self.use_hflip, self.use_rot)#to customize
+            if self.noise_rate!=0:
+
+                rng=gmax-gmin
+                if self.noise_rate!=1e-3:
+                    print(self.noise_rate,rng,self.noise_type)
+                if self.noise_type=='uniform':
+                    img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
+                else:
+                    img_lq+=np.random.normal(loc=0.0,scale=rng*self.noise_rate,size=img_lq.shape)
         '''
         # color space transform
         if 'color' in self.opt and self.opt['color'] == 'y':
@@ -137,8 +140,11 @@ class Sci2DDataset(data.Dataset):
         '''
         # crop the unmatched GT images during validation or testing, especially for SR benchmark datasets
         # TODO: It is better to update the datasets, rather than force to crop
-        if self.opt['phase'] != 'train':
+        else:
             img_gt = img_gt[0:img_lq.shape[0] * scale, 0:img_lq.shape[1] * scale, :]
+
+
+        
 
         # BGR to RGB, HWC to CHW, numpy to tensor
         img_gt, img_lq = img2tensor([np.array(img_gt), np.array(img_lq)], bgr2rgb=False, float32=True)
