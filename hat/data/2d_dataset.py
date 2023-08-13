@@ -132,6 +132,8 @@ class Sci2DDataset(data.Dataset):
                     img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
                 else:
                     img_lq+=np.random.normal(loc=0.0,scale=rng*self.noise_rate,size=img_lq.shape)
+        else:
+            img_gt = img_gt[0:img_lq.shape[0] * scale, 0:img_lq.shape[1] * scale, :]
         '''
         # color space transform
         if 'color' in self.opt and self.opt['color'] == 'y':
@@ -140,8 +142,7 @@ class Sci2DDataset(data.Dataset):
         '''
         # crop the unmatched GT images during validation or testing, especially for SR benchmark datasets
         # TODO: It is better to update the datasets, rather than force to crop
-        else:
-            img_gt = img_gt[0:img_lq.shape[0] * scale, 0:img_lq.shape[1] * scale, :]
+        
 
 
         
