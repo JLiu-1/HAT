@@ -33,6 +33,7 @@ class Sci2DDataset(data.Dataset):
         self.dyna_dim=opt['dyna_dim'] if 'dyna_dim' in opt else False
 
 
+
         self.slices_from_3d=False
         self.size_z=None
         if 'size_z' in opt:
@@ -48,6 +49,8 @@ class Sci2DDataset(data.Dataset):
         else:
             self.noise_rate=0
             self.noise_type=None 
+
+        self.local_noise=opt['local_noise'] if 'local_noise' in opt else False
 
 
         if self.io_backend_opt['type'] == 'lmdb':
@@ -124,8 +127,10 @@ class Sci2DDataset(data.Dataset):
             if self.use_hflip or self.use_rot:
                 img_gt, img_lq = augment([img_gt, img_lq], self.use_hflip, self.use_rot)#to customize
             if self.noise_rate!=0:
-
-                rng=gmax-gmin
+                if self.local_noise:
+                    rng=np.max(img_lq)-np.max(img_lq)
+                else:
+                    rng=gmax-gmin
 
                 #if self.noise_rate!=1e-3:
                 #    print(self.noise_rate,rng,self.noise_type)

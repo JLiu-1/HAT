@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_ocean_xmxl_gaussnoise1e-2_200k_gmm
+name: train_HAT_SRx2_2D_ocean_xmxl_gaussnoise1e-2local_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -19,8 +19,7 @@ datasets:
       type: disk
 
     gt_size: 128
-    global_max: 600000
-    global_min: 0
+   
 
 
     noise_rate: !!float 1e-2

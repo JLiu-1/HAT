@@ -40,6 +40,7 @@ class Sci3DDataset(data.Dataset):
         else:
             self.noise_rate=0
             self.noise_type=None 
+        self.local_noise=opt['local_noise'] if 'local_noise' in opt else False
 
 
       
@@ -99,7 +100,10 @@ class Sci3DDataset(data.Dataset):
             img_gt=img_gt[scale*x_start:scale*x_start+gt_size,scale*y_start:scale*y_start+gt_size,scale*z_start:scale*z_start+gt_size,:]
             img_lq=img_gt[::scale,::scale,::scale,:]
             if self.noise_rate!=0:
-                rng=gmax-gmin
+                if self.local_noise:
+                    rng=np.max(img_lq)-np.max(img_lq)
+                else:
+                    rng=gmax-gmin
                 if self.noise_type=='uniform':
                     img_lq+=np.random.uniform(low=-rng*self.noise_rate,high=rng*self.noise_rate,size=img_lq.shape)
                 else:
