@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_ocean_tmxl_gaussnoise1e-2_200k
+name: train_HAT_SRx2_2D_ocean_tmxl_gaussnoise1e-2_200k_gmm
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -23,6 +23,8 @@ datasets:
       type: disk
 
     gt_size: 128
+    global_max: 100000
+    global_min: 0
 
     #use_hflip: true
     #use_rot: true

@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_ocean_xmxl_uninoise1e-3_200k
+name: train_HAT_SRx2_2D_ocean_xmxl_uninoise1e-3_200k_gmm
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -20,6 +20,8 @@ datasets:
 
     gt_size: 128
 
+    global_max: 100000
+    global_min: 0
     noise_rate: !!float 1e-3
     noise_type: uniform
 
