@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_ocean_xmxl_gaussnoise1e-2local_200k
+name: train_HAT_SRx2_2D_ocean_xmxl_gaussnoise1e-2_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto

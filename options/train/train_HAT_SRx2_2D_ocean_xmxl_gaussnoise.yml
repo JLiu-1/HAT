@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_ocean_xmxl_gaussnoise1e-3local_200k
+name: train_HAT_SRx2_2D_ocean_xmxl_gaussnoise1e-4_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -20,7 +20,7 @@ datasets:
 
     gt_size: 128
    
-    noise_rate: !!float 1e-3
+    noise_rate: !!float 1e-4
     noise_type: gauss
 
     #use_hflip: true
