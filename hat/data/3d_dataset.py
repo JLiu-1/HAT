@@ -1,6 +1,7 @@
 
 import cv2
 import numpy as np
+import random
 import os.path as osp
 import torch
 from torch.utils import data as data
@@ -91,9 +92,9 @@ class Sci3DDataset(data.Dataset):
             gt_size = self.opt['gt_size']
             # random crop
             lq_size=gt_size //scale
-            x_start=np.random.randint(size_h//scale-lq_size)
-            y_start=np.random.randint(size_w//scale-lq_size)
-            z_start=np.random.randint(size_d//scale-lq_size)
+            x_start=random.randint(0,size_h//scale-lq_size)
+            y_start=random.randint(0,size_w//scale-lq_size)
+            z_start=random.randint(0,size_d//scale-lq_size)
 
 
         

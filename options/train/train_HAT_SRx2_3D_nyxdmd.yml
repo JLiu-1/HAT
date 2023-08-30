@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_3D_nyxdmd
+name: train_HAT_SRx2_3D_dmdlog
 model_type: HATModel_3D
 scale: 2
 num_gpu: auto
