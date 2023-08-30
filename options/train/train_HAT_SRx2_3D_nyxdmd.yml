@@ -16,7 +16,7 @@ datasets:
     io_backend:
       type: disk
 
-    gt_size: 32
+    gt_size: 64
     #use_hflip: true
     #use_rot: true
 
@@ -60,13 +60,13 @@ network_g:
   in_chans: 1
   img_size: 16
   window_size: 8
-  compress_ratio: 16
-  squeeze_factor: 24
+  compress_ratio: 3
+  squeeze_factor: 30
   conv_scale: 0.01
   overlap_ratio: 0.5
   img_range: 1.
   depths: [6, 6, 6, 6, 6, 6]
-  embed_dim: 144
+  embed_dim: 180
   num_heads: [6, 6, 6, 6, 6, 6]
   mlp_ratio: 2
   upsampler: 'pixelshuffle'
@@ -89,10 +89,10 @@ train:
 
   scheduler:
     type: MultiStepLR
-    milestones: [50000, 80000, 90000, 95000]
+    milestones: [100000, 160000, 180000, 190000]
     gamma: 0.5
 
-  total_iter: 100000
+  total_iter: 200000
   warmup_iter: -1  # no warm up
 
   # losses
@@ -122,7 +122,7 @@ val:
 # logging settings
 logger:
   print_freq: 100
-  save_checkpoint_freq: !!float 5e3
+  save_checkpoint_freq: !!float 2e4
   use_tb_logger: true
   wandb:
     project: ~
