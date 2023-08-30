@@ -32,9 +32,7 @@ for f in filelist:
 
     if xyz=="x":
         arr=arr.reshape((size_y,size_z))
-        for i in range(size_y):
-            for j in range(size_z):
-
+        
         res[idx,:,:]+=arr
         counts[idx,:,:]+=np.ones((size_y,size_z),dtype=np.float32)
     elif xyz=="y":
