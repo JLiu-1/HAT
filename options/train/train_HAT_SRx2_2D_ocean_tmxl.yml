@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_ocean_tmxl_200k
+name: train_HAT_SRx2_2D_ocean_tmxl_pre_norm_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -10,7 +10,10 @@ datasets:
   train:
     name: ocean_tmxl
     type: Sci2DDataset
-    dataroot_gt: ./datasets/ocean_tmxl
+    dataroot_gt: ./datasets/ocean_tmxl_pre_norm
+
+    max: 1.0
+    min: 0.0
   
 
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub

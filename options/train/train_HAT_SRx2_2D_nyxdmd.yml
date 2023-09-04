@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_nyxdmdlog_200k
+name: train_HAT_SRx2_2D_nyxdmdlog_pre_norm_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -10,9 +10,11 @@ datasets:
   train:
     name: nyx_dmdlog_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/NYX_dmdlog_2dslices
+    dataroot_gt: ./datasets/NYX_dmdlog_2dslices_pre_norm
     size_x: 512
     size_y: 512
+    max: 1.0
+    min: 0.0
 
   
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub

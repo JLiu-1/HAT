@@ -1,5 +1,5 @@
 # general settings
-name: train_HATsin_SRx2_2D_qrain_200k
+name: train_HATsin_SRx2_2D_qrain_pre_norm_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -10,10 +10,12 @@ datasets:
   train:
     name: qrainlog_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/qrainlog_2dslices
+    dataroot_gt: ./datasets/qrainlog_2dslices_pre_norm
     size_x: 100
     size_y: 500
     size_z: 500
+    max: 1.0
+    min: 0.0
 
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt

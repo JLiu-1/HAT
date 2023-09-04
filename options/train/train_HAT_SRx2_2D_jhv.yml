@@ -1,5 +1,5 @@
 # general settings
-name: train_HATsin_SRx2_2D_qgraup_pre_norm_200k
+name: train_HAT_SRx2_2D_jhv_pre_norm_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -8,21 +8,21 @@ manual_seed: 0
 # dataset and data loader settings
 datasets:
   train:
-    name: qgrauplog_2dslices
+    name: jhv_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/qgrauplog_2dslices_pre_norm
-    size_x: 100
-    size_y: 500
-    size_z: 500
+    dataroot_gt: ./datasets/jhv_2dslices_pre_norm
+    size_x: 512
+    size_y: 512
     max: 1.0
     min: 0.0
 
+  
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt
     io_backend:
       type: disk
 
-    gt_size: 96
+    gt_size: 128
 
     #use_hflip: true
     #use_rot: true
@@ -62,10 +62,10 @@ datasets:
 
 # network structures
 network_g:
-  type: HAT_Sin
+  type: HAT
   upscale: 2
   in_chans: 1
-  img_size: 48
+  img_size: 64
   window_size: 16
   compress_ratio: 3
   squeeze_factor: 30
@@ -110,7 +110,7 @@ train:
 
 #validation settings
 val:
-  val_freq: !!float 1e4
+  val_freq: !!float 5e3
   save_img: false
   pbar: False
 

@@ -1,5 +1,5 @@
 # general settings
-name: train_HAT_SRx2_2D_qgraup_200k
+name: train_HAT_SRx2_2D_qgraup_pre_norm_200k
 model_type: HATModel
 scale: 2
 num_gpu: auto
@@ -10,10 +10,12 @@ datasets:
   train:
     name: qgrauplog_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/qgrauplog_2dslices
+    dataroot_gt: ./datasets/qgrauplog_pre_norm_2dslices
     size_x: 100
     size_y: 500
     size_z: 500
+    max: 1.0
+    min: 0.0
 
     #dataroot_lq: datasets/DF2K/DF2K_bicx2_sub
     #meta_info_file: hat/data/meta_info/meta_info_DF2Ksub_GT.txt
