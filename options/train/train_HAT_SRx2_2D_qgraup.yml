@@ -10,7 +10,7 @@ datasets:
   train:
     name: qgrauplog_2dslices
     type: Sci2DDataset
-    dataroot_gt: ./datasets/qgrauplog_pre_norm_2dslices
+    dataroot_gt: ./datasets/qgrauplog_2dslices_pre_norm
     size_x: 100
     size_y: 500
     size_z: 500
