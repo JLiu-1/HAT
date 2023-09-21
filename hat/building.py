@@ -43,6 +43,8 @@ for f in filelist:
         arr=arr.reshape((size_x,size_y))
         res[:,:,idx]+=arr
         counts[:,:,idx]+=np.ones((size_x,size_y),dtype=np.float32)
+
+counts[counts==0.0]=1.0
 res=np.divide(res,counts)
 
 res.tofile(ofile)
